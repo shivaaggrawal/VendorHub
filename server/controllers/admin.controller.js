@@ -6,6 +6,7 @@ const Payment  = require("../models/Payment.model");
 const ApiResponse  = require("../utils/ApiResponse");
 const ApiError     = require("../utils/ApiError");
 const asyncHandler = require("../utils/asyncHandler");
+const settingsService = require("../services/settings.service");
 const { PAYMENT_STATUS } = require("../constants/orderStatus");
 
 // ── GET /api/admin/analytics ──────────────────────────────────────────────
@@ -165,9 +166,31 @@ const updateCommissionSettings = asyncHandler(async (req, res) => {
   if (rate === undefined || rate < 0 || rate > 100) {
     throw new ApiError(400, "Commission rate must be between 0 and 100.");
   }
-  // In production, persist to a Settings collection. Here we log it.
   process.env.PLATFORM_COMMISSION_RATE = String(rate);
   return new ApiResponse(200, `Commission rate updated to ${rate}%.`, { rate }).send(res);
+});
+
+// ── PATCH /api/admin/settings/timer ─────────────────────────────────────
+const updateTimerSettings = asyncHandler(async (req, res) => {
+  const { hours } = req.body;
+  if (hours === undefined || hours === null) {
+    throw new ApiError(400, "Timer hours are required.");
+  }
+  if (typeof hours !== "number") {
+    throw new ApiError(400, "Timer hours must be a number.");
+  }
+  if (hours <= 0 || hours > 1000) {
+    throw new ApiError(400, "Timer hours must be between 1 and 1000.");
+  }
+
+  const expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
+  const setting = await settingsService.upsertSetting("countdown", {
+    hours,
+    expiresAt,
+    updatedAt: new Date().toISOString(),
+  });
+
+  return new ApiResponse(200, "Countdown timer updated.", setting.value).send(res);
 });
 
 // ── POST /api/admin/orders/:id/refund ────────────────────────────────────
@@ -190,5 +213,6 @@ module.exports = {
   deleteCategory,
   getAllOrders,
   updateCommissionSettings,
+  updateTimerSettings,
   adminRefund,
 };
