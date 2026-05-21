@@ -1,0 +1,75 @@
+const { validationResult } = require("express-validator");
+const authService = require("../services/auth.service");
+const { sendTokenCookie } = require("../utils/generateToken");
+const ApiResponse = require("../utils/ApiResponse");
+const ApiError = require("../utils/ApiError");
+const asyncHandler = require("../utils/asyncHandler");
+
+/**
+ * Checks express-validator results and throws if errors exist.
+ */
+const validate = (req) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new ApiError(422, "Validation failed", errors.array());
+  }
+};
+
+// ── POST /api/auth/register ───────────────────────────────────────────────
+const register = asyncHandler(async (req, res) => {
+  validate(req);
+  const { name, email, password, role } = req.body;
+  const { user, token } = await authService.registerUser({ name, email, password, role });
+
+  sendTokenCookie(res, token);
+  return new ApiResponse(201, "Account created successfully.", { user, token }).send(res);
+});
+
+// ── POST /api/auth/login ──────────────────────────────────────────────────
+const login = asyncHandler(async (req, res) => {
+  validate(req);
+  const { email, password } = req.body;
+  const { user, token } = await authService.loginUser({ email, password });
+
+  sendTokenCookie(res, token);
+  return new ApiResponse(200, "Login successful.", { user, token }).send(res);
+});
+
+// ── POST /api/auth/logout ─────────────────────────────────────────────────
+const logout = asyncHandler(async (_req, res) => {
+  res.clearCookie("token", { httpOnly: true, sameSite: "strict" });
+  return new ApiResponse(200, "Logged out successfully.").send(res);
+});
+
+// ── GET /api/auth/me ──────────────────────────────────────────────────────
+const getMe = asyncHandler(async (req, res) => {
+  const user = await authService.getProfile(req.user._id);
+  return new ApiResponse(200, "Profile fetched.", user).send(res);
+});
+
+// ── PATCH /api/auth/me ────────────────────────────────────────────────────
+const updateMe = asyncHandler(async (req, res) => {
+  const user = await authService.updateProfile(req.user._id, req.body);
+  return new ApiResponse(200, "Profile updated.", user).send(res);
+});
+
+// ── POST /api/auth/wishlist/:productId (toggle) ───────────────────────────
+const toggleWishlist = asyncHandler(async (req, res) => {
+  const User = require("../models/User.model");
+  const { productId } = req.params;
+  const user = await User.findById(req.user._id);
+
+  const idx = user.wishlist.findIndex((id) => id.toString() === productId);
+  let message;
+  if (idx === -1) {
+    user.wishlist.push(productId);
+    message = "Added to wishlist.";
+  } else {
+    user.wishlist.splice(idx, 1);
+    message = "Removed from wishlist.";
+  }
+  await user.save();
+  return new ApiResponse(200, message, { wishlist: user.wishlist }).send(res);
+});
+
+module.exports = { register, login, logout, getMe, updateMe, toggleWishlist };
