@@ -4,7 +4,7 @@ const {
   getPlatformAnalytics, getPendingVendors, approveVendor, rejectVendor,
   getAllUsers, toggleUserActive, createCategory, getAllCategories,
   updateCategory, deleteCategory, getAllOrders, updateCommissionSettings,
-  adminRefund,
+  updateTimerSettings, adminRefund,
 } = require("../controllers/admin.controller");
 const { verifyToken, checkRole } = require("../middleware/auth.middleware");
 
@@ -35,5 +35,6 @@ router.post("/orders/:id/refund",         adminRefund);
 
 // Platform settings
 router.patch("/settings/commission",      updateCommissionSettings);
+router.patch("/settings/timer",           updateTimerSettings);
 
 module.exports = router;
