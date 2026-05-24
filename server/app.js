@@ -46,11 +46,19 @@ app.use(
     origin: function (origin, callback) {
       // Allow requests with no origin (like mobile apps, curl, or server-to-server calls)
       if (!origin) return callback(null, true);
-      
+
+      let hostname = "";
+      try {
+        hostname = new URL(origin).hostname;
+      } catch (e) {
+        // Fallback for non-standard origins
+      }
+
       const isAllowed = allowedOrigins.includes(origin) || 
                         origin.startsWith("http://localhost:") || 
                         origin.startsWith("http://127.0.0.1:") ||
-                        origin === process.env.CLIENT_URL;
+                        origin === process.env.CLIENT_URL ||
+                        (hostname && (hostname.endsWith(".onrender.com") || hostname === "onrender.com"));
 
       if (isAllowed) {
         callback(null, true);
