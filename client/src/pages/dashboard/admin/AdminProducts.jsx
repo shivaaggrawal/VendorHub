@@ -143,7 +143,7 @@ export default function AdminProducts() {
                         </span>
                       </td>
                       <td className="py-4 px-6 font-bold text-foreground">
-                        ${product.price?.toFixed(2)}
+                        ₹{Math.round(product.price).toLocaleString("en-IN")}
                       </td>
                       <td className="py-4 px-6 font-semibold text-foreground">
                         {product.stock} units

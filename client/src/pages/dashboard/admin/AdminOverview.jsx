@@ -12,6 +12,8 @@ import {
   Award,
 } from "lucide-react";
 import api from "../../../services/api";
+import { useToast } from "../../../components/ui/toast";
+import QueryErrorPlaceholder from "../../../components/ui/QueryErrorPlaceholder";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,9 +30,15 @@ const itemVariants = {
 
 export default function AdminOverview() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   // Fetch Platform Analytics from backend
-  const { data: analytics, isLoading: analyticsLoading } = useQuery({
+  const { 
+    data: analytics, 
+    isLoading: analyticsLoading, 
+    error: analyticsError, 
+    refetch: refetchAnalytics 
+  } = useQuery({
     queryKey: ["adminAnalytics"],
     queryFn: async () => {
       const res = await api.get("/admin/analytics");
@@ -39,7 +47,12 @@ export default function AdminOverview() {
   });
 
   // Fetch Pending Vendors
-  const { data: pendingVendors, isLoading: vendorsLoading } = useQuery({
+  const { 
+    data: pendingVendors, 
+    isLoading: vendorsLoading, 
+    error: vendorsError, 
+    refetch: refetchVendors 
+  } = useQuery({
     queryKey: ["pendingVendors"],
     queryFn: async () => {
       const res = await api.get("/admin/vendors/pending");
@@ -56,9 +69,10 @@ export default function AdminOverview() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminAnalytics"] });
       queryClient.invalidateQueries({ queryKey: ["pendingVendors"] });
+      toast.success("Vendor approved successfully.");
     },
     onError: (err) => {
-      alert(err.response?.data?.message || "Failed to approve vendor.");
+      toast.error(err.response?.data?.message || "Failed to approve vendor.");
     },
   });
 
@@ -71,9 +85,10 @@ export default function AdminOverview() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminAnalytics"] });
       queryClient.invalidateQueries({ queryKey: ["pendingVendors"] });
+      toast.success("Vendor registration rejected.");
     },
     onError: (err) => {
-      alert(err.response?.data?.message || "Failed to reject vendor.");
+      toast.error(err.response?.data?.message || "Failed to reject vendor.");
     },
   });
 
@@ -95,19 +110,35 @@ export default function AdminOverview() {
     },
     {
       label: "Gross Platform Revenue",
-      value: `$${analytics?.revenue?.totalRevenue?.toLocaleString() || 0}`,
+      value: `₹${analytics?.revenue?.totalRevenue?.toLocaleString() || 0}`,
       trend: "Cumulative sales",
       icon: TrendingUp,
       color: "from-emerald-500/10 to-teal-500/5 border-emerald-500/20",
     },
     {
       label: "Platform Net Commission",
-      value: `$${analytics?.revenue?.totalCommission?.toLocaleString() || 0}`,
+      value: `₹${analytics?.revenue?.totalCommission?.toLocaleString() || 0}`,
       trend: "Direct earnings",
       icon: Percent,
       color: "from-[#e1dcc9]/10 to-[#412d15]/10 border-[#e1dcc9]/25",
     },
   ];
+
+  if (analyticsError || vendorsError) {
+    const handleRefetchAll = () => {
+      refetchAnalytics();
+      refetchVendors();
+    };
+    return (
+      <div className="p-6">
+        <QueryErrorPlaceholder 
+          error={analyticsError || vendorsError} 
+          refetch={handleRefetchAll} 
+          message="Failed to load administrator dashboard command data." 
+        />
+      </div>
+    );
+  }
 
   return (
     <LoaderWrapper loading={analyticsLoading || vendorsLoading} text="Analyzing platform operations..." subtitle="SYSTEM ADMIN SECURITY CORE" minHeight="400px">
@@ -273,7 +304,7 @@ export default function AdminOverview() {
                       </p>
                     </div>
                     <span className="text-xs font-bold text-[#e1dcc9]">
-                      ${vendor.totalSales?.toFixed(2)}
+                      ₹{Math.round(vendor.totalSales).toLocaleString("en-IN")}
                     </span>
                   </div>
                 ))

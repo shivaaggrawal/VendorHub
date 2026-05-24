@@ -143,7 +143,7 @@ export default function AdminOrders() {
                         </div>
                       </td>
                       <td className="py-4 px-6 font-bold text-foreground">
-                        ${order.totalAmount?.toFixed(2)}
+                        ₹{Math.round(order.totalAmount).toLocaleString("en-IN")}
                       </td>
                       <td className="py-4 px-6">
                         <span

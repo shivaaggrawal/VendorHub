@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Shield, Percent, CheckCircle, Sparkles } from "lucide-react";
 import api from "../../../services/api";
+import { useToast } from "../../../components/ui/toast";
 
 export default function AdminSettings() {
+  const { toast } = useToast();
   const [commissionRate, setCommissionRate] = useState(10);
   const [success, setSuccess] = useState(false);
 
@@ -15,10 +17,11 @@ export default function AdminSettings() {
     },
     onSuccess: () => {
       setSuccess(true);
+      toast.success("Platform parameters updated successfully!");
       setTimeout(() => setSuccess(false), 3000);
     },
     onError: (err) => {
-      alert(err.response?.data?.message || "Failed to update commission rate.");
+      toast.error(err.response?.data?.message || "Failed to update commission rate.");
     },
   });
 
