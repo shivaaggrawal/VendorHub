@@ -12,6 +12,17 @@ export const fetchProfile = createAsyncThunk("auth/fetchProfile", async (_, thun
   }
 });
 
+export const updateProfile = createAsyncThunk("auth/updateProfile", async (updates, thunkAPI) => {
+  try {
+    const response = await api.patch("/auth/me", updates);
+    const user = response.data.data;
+    localStorage.setItem("user", JSON.stringify(user));
+    return user;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to update profile");
+  }
+});
+
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
     const response = await api.post("/auth/login", credentials);
@@ -133,6 +144,18 @@ const authSlice = createSlice({
         state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
