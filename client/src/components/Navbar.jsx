@@ -296,7 +296,7 @@ const MobileDrawer = ({ open, onClose, user, isAuthenticated, onLogout }) => {
             <nav className="space-y-2">
               {visibleLinks.map(({ label, to, icon: Icon }) => {
                 const active = location.pathname + location.search === to || location.pathname === to;
-                const finalTo = label === "Profile" && isAuthenticated ? "/orders/latest/tracking" : to;
+                const finalTo = label === "Profile" && isAuthenticated ? "/profile" : to;
                 return (
                   <Link
                     key={label}
@@ -345,7 +345,7 @@ const MobileDrawer = ({ open, onClose, user, isAuthenticated, onLogout }) => {
   );
 };
 
-const FloatingBottomNav = ({ cartCount }) => {
+const FloatingBottomNav = ({ cartCount, animateCart }) => {
   const location = useLocation();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
@@ -353,7 +353,7 @@ const FloatingBottomNav = ({ cartCount }) => {
     <nav className="fixed bottom-4 left-4 right-4 z-50 rounded-full border border-[#e1dcc9]/12 bg-[#1f150c]/72 px-3 py-2 shadow-[0_24px_70px_rgba(0,0,0,0.68)] backdrop-blur-2xl lg:hidden">
       <div className="grid grid-cols-4 gap-1">
         {bottomLinks.map(({ label, to, icon: Icon, cart }) => {
-          const finalTo = label === "Profile" && isAuthenticated ? "/orders/latest/tracking" : to;
+          const finalTo = label === "Profile" && isAuthenticated ? "/profile" : to;
           const active = location.pathname === finalTo || (label === "Wishlist" && location.search.includes("wishlist"));
           return (
             <Link
@@ -361,14 +361,33 @@ const FloatingBottomNav = ({ cartCount }) => {
               to={finalTo}
               className={`relative flex flex-col items-center justify-center rounded-full px-2 py-2 text-[10px] font-bold transition ${
                 active ? "bg-[#e1dcc9] text-black" : "text-[#e1dcc9]/65 hover:bg-[#412d15]/50 hover:text-[#e1dcc9]"
-              }`}
+              } ${cart ? "cart-glow-target" : ""}`}
             >
-              <Icon className="mb-1 h-4 w-4" />
+              {cart ? (
+                <motion.div
+                  animate={animateCart ? {
+                    scale: [1, 1.25, 0.9, 1.12, 1],
+                    rotate: [0, -8, 8, -4, 0],
+                    y: [0, -5, 2, -1, 0]
+                  } : {}}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  <Icon className="mb-1 h-4 w-4" />
+                </motion.div>
+              ) : (
+                <Icon className="mb-1 h-4 w-4" />
+              )}
               <span>{label}</span>
               {cart && cartCount > 0 && (
-                <span className="absolute right-4 top-1 grid h-4 min-w-4 place-items-center rounded-full border border-black/30 bg-[#e1dcc9] px-1 text-[9px] font-black text-black">
+                <motion.span
+                  key={cartCount}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  className="absolute right-4 top-1 grid h-4 min-w-4 place-items-center rounded-full border border-black/30 bg-[#e1dcc9] px-1 text-[9px] font-black text-black"
+                >
                   {cartCount > 99 ? "99+" : cartCount}
-                </span>
+                </motion.span>
               )}
             </Link>
           );
@@ -387,6 +406,15 @@ const Navbar = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const cartItems = useSelector((state) => state.cart.items || []);
   const cartCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const [animateCart, setAnimateCart] = useState(false);
+
+  useEffect(() => {
+    if (cartCount > 0) {
+      setAnimateCart(true);
+      const timer = setTimeout(() => setAnimateCart(false), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [cartCount]);
 
   const handleLogout = async () => {
     await api.post("/auth/logout").catch(() => {});
@@ -419,21 +447,44 @@ const Navbar = () => {
               <div className="flex items-center gap-3">
                 <Link
                   to="/explore?wishlist=true"
-                  className="grid h-10 w-10 place-items-center rounded-xl text-[#e1dcc9]/70 transition hover:bg-[#412d15]/45 hover:text-[#e1dcc9]"
+                  className="grid h-10 w-10 place-items-center rounded-xl text-[#e1dcc9]/70 transition hover:bg-[#412d15]/45 hover:text-rose-500"
                 >
-                  <Heart className="h-5 w-5" />
+                  <Heart className="h-5 w-5 transition-all duration-300 hover:fill-[#cc3333] hover:text-[#cc3333] hover:drop-shadow-[0_0_8px_rgba(204,51,51,0.5)]" />
                 </Link>
                 <Link
                   to="/cart"
-                  className="relative grid h-10 w-10 place-items-center rounded-xl text-[#e1dcc9]/70 transition hover:bg-[#412d15]/45 hover:text-[#e1dcc9]"
+                  className="relative grid h-10 w-10 place-items-center rounded-xl text-[#e1dcc9]/70 transition hover:bg-[#412d15]/45 hover:text-[#e1dcc9] cart-glow-target"
                 >
-                  <ShoppingBag className="h-5 w-5" />
+                  <motion.div
+                    animate={animateCart ? {
+                      scale: [1, 1.25, 0.9, 1.12, 1],
+                      rotate: [0, -8, 8, -4, 0],
+                      y: [0, -5, 2, -1, 0]
+                    } : {}}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    <ShoppingBag className="h-5 w-5" />
+                  </motion.div>
                   {cartCount > 0 && (
-                    <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full border border-[#1f150c] bg-[#e1dcc9] px-1 text-[10px] font-black text-black">
+                    <motion.span
+                      key={cartCount}
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                      className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full border border-[#1f150c] bg-[#e1dcc9] px-1 text-[10px] font-black text-black shadow-glow-sm"
+                    >
                       {cartCount > 99 ? "99+" : cartCount}
-                    </span>
+                    </motion.span>
                   )}
                 </Link>
+                {isAuthenticated && (
+                  <Link
+                    to="/profile"
+                    className="grid h-10 w-10 place-items-center rounded-xl text-[#e1dcc9]/70 transition hover:bg-[#412d15]/45 hover:text-[#e1dcc9]"
+                  >
+                    <User className="h-5 w-5" />
+                  </Link>
+                )}
                 {isAuthenticated ? (
                   <button
                     onClick={handleLogout}
@@ -485,7 +536,7 @@ const Navbar = () => {
         onLogout={handleLogout}
       />
       <SearchSheet open={searchOpen} onClose={() => setSearchOpen(false)} />
-      <FloatingBottomNav cartCount={cartCount} />
+      <FloatingBottomNav cartCount={cartCount} animateCart={animateCart} />
     </>
   );
 };
