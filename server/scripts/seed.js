@@ -300,7 +300,7 @@ const seedData = async () => {
         isVendorApproved: true,
         storeName: "Acoustix AI Labs",
         storeDescription: "Next-generation intelligent audio systems, neural noise-cancelling equipment, and wearable speakers.",
-        vendorLocation: "California, USA",
+        vendorLocation: "Colaba, Mumbai",
         isActive: true,
       },
       {
@@ -311,7 +311,7 @@ const seedData = async () => {
         isVendorApproved: true,
         storeName: "OmniTech Systems",
         storeDescription: "Premium computing systems, high-performance gaming gear, smartphones, and futuristic smart gadgets.",
-        vendorLocation: "Tokyo, Japan",
+        vendorLocation: "Andheri, Mumbai",
         isActive: true,
       },
       {
@@ -322,7 +322,7 @@ const seedData = async () => {
         isVendorApproved: true,
         storeName: "NeoThread Studio",
         storeDescription: "Cinematic fashion-tech, high-contrast streetwear, structural hoodies, and premium footwear.",
-        vendorLocation: "Seoul, South Korea",
+        vendorLocation: "Bandra, Mumbai",
         isActive: true,
       },
       {
@@ -333,7 +333,7 @@ const seedData = async () => {
         isVendorApproved: true,
         storeName: "Aura Biologicals",
         storeDescription: "Intelligent health trackers, smart biological rings, and tactical bio-monitoring equipment.",
-        vendorLocation: "Geneva, Switzerland",
+        vendorLocation: "Powai, Mumbai",
         isActive: true,
       },
       {
@@ -344,7 +344,7 @@ const seedData = async () => {
         isVendorApproved: true,
         storeName: "Kuro Atelier",
         storeDescription: "Minimalist leather carryalls, water-impermeable technical packs, and smart storage units.",
-        vendorLocation: "Paris, France",
+        vendorLocation: "Juhu, Mumbai",
         isActive: true,
       }
     ]);
@@ -902,8 +902,9 @@ const seedData = async () => {
       for (let i = 0; i < 60; i++) {
         const title = titles[i % titles.length] + (i >= titles.length ? ` V${Math.floor(i / titles.length) + 1}` : "");
         const subcategory = subcategories[i % subcategories.length];
-        const price = basePrice + (i * 12) + (i % 3 === 0 ? 0.99 : 0.50);
-        const originalPrice = i % 2 === 0 ? price + 50 : 0;
+        const rawPrice = basePrice + (i * 12) + (i % 3 === 0 ? 0.99 : 0.50);
+        const price = Math.round(rawPrice * 83);
+        const originalPrice = i % 2 === 0 ? Math.round((rawPrice + 50) * 83) : 0;
         const stock = 10 + (i * 2) % 45;
         
         // Pick an image
@@ -970,46 +971,75 @@ const seedData = async () => {
 
     // Generate for all 6 categories
     const genElectronics = generateCategoryProducts(
-      "Electronics", categories["Electronics"], omnitech, "Tokyo, Japan",
+      "Electronics", categories["Electronics"], omnitech, "Andheri, Mumbai",
       ELECTRONICS_TITLES, ["Smartphones", "Laptops", "Gaming Accessories", "AI Gadgets"], ELECTRONICS_IMAGES,
       "Experience elite computing capabilities, advanced thermal regulation, and high refresh rate visual engines.", 499,
       ["electronics", "device", "pc", "tech"]
     );
 
     const genWearables = generateCategoryProducts(
-      "Wearables", categories["Wearables"], aura, "Geneva, Switzerland",
+      "Wearables", categories["Wearables"], aura, "Powai, Mumbai",
       WEARABLES_TITLES, ["Smart Rings", "Smartwatches", "Smart Glasses", "Bio-Sensors"], WEARABLES_IMAGES,
       "Intelligent biometric monitoring in a luxury, lightweight body. Active GPS, stress tracking, and continuous health telemetry.", 199,
       ["wearable", "health", "smart", "fitness"]
     );
 
     const genAudio = generateCategoryProducts(
-      "Audio", categories["Audio"], acoustix, "California, USA",
+      "Audio", categories["Audio"], acoustix, "Colaba, Mumbai",
       AUDIO_TITLES, ["Headphones", "Speakers", "Earbuds", "Microphones"], AUDIO_IMAGES,
       "Immersive spatial sound mapping with neural active noise cancellation. Deliver crystal clear high-fidelity acoustics.", 129,
       ["audio", "sound", "music", "anc"]
     );
 
     const genFashion = generateCategoryProducts(
-      "Fashion", categories["Fashion"], neothread, "Seoul, South Korea",
+      "Fashion", categories["Fashion"], neothread, "Bandra, Mumbai",
       FASHION_TITLES, ["Hoodies", "Shoes", "Jackets", "Cargos"], FASHION_IMAGES,
       "High-contrast street silhouette engineered from double-woven technical fibers. Water-impermeable zippers and premium styling.", 89,
       ["fashion", "streetwear", "clothing", "apparel"]
     );
 
     const genAccessories = generateCategoryProducts(
-      "Accessories", categories["Accessories"], kuro, "Paris, France",
+      "Accessories", categories["Accessories"], kuro, "Juhu, Mumbai",
       ACCESSORIES_TITLES, ["Bags", "Wallets", "Cases", "Travel Accessories"], ACCESSORIES_IMAGES,
       "Minimalist functional design handcrafted from high-tensility ballistic nylon and scratch-resistant Saffiano leather.", 49,
       ["accessories", "bag", "leather", "travel"]
     );
 
     const genFurniture = generateCategoryProducts(
-      "Furniture & Home", categories["Furniture & Home"], omnitech, "Tokyo, Japan",
+      "Furniture & Home", categories["Furniture & Home"], omnitech, "Andheri, Mumbai",
       FURNITURE_TITLES, ["Desks", "Chairs", "Lighting", "Smart Storage"], FURNITURE_IMAGES,
       "Ergonomically engineered command hardware. Clean structural lines designed to elevate your creative workspace comfort.", 149,
       ["furniture", "home", "desk", "office"]
     );
+
+    // Transform manual productsData to INR and Mumbai locations dynamically
+    const locationMap = {
+      "California, USA": "Colaba, Mumbai",
+      "Tokyo, Japan": "Andheri, Mumbai",
+      "Seoul, South Korea": "Bandra, Mumbai",
+      "Geneva, Switzerland": "Powai, Mumbai",
+      "Paris, France": "Juhu, Mumbai"
+    };
+
+    productsData.forEach(p => {
+      // 1. Convert Price to INR
+      p.price = Math.round(p.price * 83);
+      if (p.discountedPrice) {
+        p.discountedPrice = Math.round(p.discountedPrice * 83);
+      }
+      // 2. Map Location to Mumbai
+      if (p.vendorLocation && locationMap[p.vendorLocation]) {
+        p.vendorLocation = locationMap[p.vendorLocation];
+      }
+      // 3. Localize specific review references
+      if (p.reviews && p.reviews.length > 0) {
+        p.reviews.forEach(r => {
+          if (r.comment && r.comment.includes("Tokyo streets")) {
+            r.comment = r.comment.replace("Tokyo streets", "Bandra streets");
+          }
+        });
+      }
+    });
 
     // Combine manual and programmatically generated items
     const allProductsToSeed = [
