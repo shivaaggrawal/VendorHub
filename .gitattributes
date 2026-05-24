@@ -1,0 +1,23 @@
+# Enforce LF line endings for all text files across all platforms
+* text=auto eol=lf
+
+# Explicitly set JS/JSON/CSS/HTML to LF
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.md   text eol=lf
+*.env  text eol=lf
+*.sh   text eol=lf
+
+# Binary files — don't touch
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary

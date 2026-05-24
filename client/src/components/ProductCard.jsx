@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Heart, ShoppingBag, Star, Check } from "lucide-react";
@@ -37,7 +37,7 @@ const normalizeProduct = (product = {}) => {
   };
 };
 
-const ProductCard = ({ product, index = 0 }) => {
+const ProductCard = memo(({ product, index = 0 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -45,9 +45,12 @@ const ProductCard = ({ product, index = 0 }) => {
   const [loading, setLoading] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const discount = item.originalPrice
-    ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)
-    : 0;
+  const discount = useMemo(
+    () => item.originalPrice
+      ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)
+      : 0,
+    [item.originalPrice, item.price]
+  );
 
   useEffect(() => {
     const wishlistIds = new Set(
@@ -58,13 +61,13 @@ const ProductCard = ({ product, index = 0 }) => {
     setIsWishlisted(wishlistIds.has(item._id?.toString()));
   }, [user, item._id]);
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
     e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
-  };
+  }, []);
 
   const handleAddToCart = (event) => {
     event.preventDefault();
@@ -323,6 +326,7 @@ const ProductCard = ({ product, index = 0 }) => {
       </Link>
     </motion.article>
   );
-};
+});
 
+ProductCard.displayName = "ProductCard";
 export default ProductCard;
