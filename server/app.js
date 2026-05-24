@@ -58,7 +58,12 @@ app.use(
                         origin.startsWith("http://localhost:") || 
                         origin.startsWith("http://127.0.0.1:") ||
                         origin === process.env.CLIENT_URL ||
-                        (hostname && (hostname.endsWith(".onrender.com") || hostname === "onrender.com"));
+                        (hostname && (
+                          hostname.endsWith(".vercel.app") || 
+                          hostname.endsWith(".onrender.com") || 
+                          hostname === "vercel.app" || 
+                          hostname === "onrender.com"
+                        ));
 
       if (isAllowed) {
         callback(null, true);

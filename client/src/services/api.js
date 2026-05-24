@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL || "https://vendorhub-dwpl.onrender
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
-  timeout: 12000, // 12-second gateway timeout for high resilience
+  timeout: 90000, // 90-second timeout specifically configured to absorb Render cold starts
   headers: {
     "Content-Type": "application/json",
   },
