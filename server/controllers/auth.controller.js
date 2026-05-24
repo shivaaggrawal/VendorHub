@@ -37,7 +37,11 @@ const login = asyncHandler(async (req, res) => {
 
 // ── POST /api/auth/logout ─────────────────────────────────────────────────
 const logout = asyncHandler(async (_req, res) => {
-  res.clearCookie("token", { httpOnly: true, sameSite: "strict" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+  });
   return new ApiResponse(200, "Logged out successfully.").send(res);
 });
 
