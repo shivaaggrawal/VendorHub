@@ -260,15 +260,17 @@ const ProductCard = memo(({ product, index = 0 }) => {
                   )}
                 </Button>
                 <Button
-                  asChild
                   size="sm"
                   variant="outline"
                   className="h-9 w-9 rounded-full border-[#e1dcc9]/15 bg-black/75 p-0 text-[#e1dcc9] hover:bg-[#e1dcc9] hover:text-black"
                   aria-label="Quick view"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navigate(`/product/${item._id}`);
+                  }}
                 >
-                  <Link to={`/product/${item._id}`}>
-                    <Eye className="h-3.5 w-3.5" />
-                  </Link>
+                  <Eye className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </div>
