@@ -5,7 +5,15 @@ const Payment = require("../models/Payment.model");
 const ApiError = require("../utils/ApiError");
 const { PAYMENT_STATUS } = require("../constants/orderStatus");
 
-const COMMISSION_RATE = parseFloat(process.env.PLATFORM_COMMISSION_RATE || "10") / 100;
+/** Reads commission rate from DB (persisted) or falls back to env var */
+const getCommissionRate = async () => {
+  try {
+    const Setting = require("../models/Setting.model");
+    const s = await Setting.findOne({ key: "commissionRate" }).lean();
+    if (s?.value?.rate !== undefined) return parseFloat(s.value.rate) / 100;
+  } catch (_) { /* fall through */ }
+  return parseFloat(process.env.PLATFORM_COMMISSION_RATE || "10") / 100;
+};
 
 /**
  * Creates a Razorpay order for a given marketplace order.
@@ -23,11 +31,18 @@ const createPaymentOrder = async (orderId, buyerId) => {
     throw new ApiError(400, "Order is already paid.");
   }
 
+  const isDummy = process.env.RAZORPAY_KEY_ID?.startsWith("rzp_test_dummy");
+  if (!isDummy && !process.env.RAZORPAY_KEY_ID?.startsWith("rzp_")) {
+    throw new ApiError(
+      503,
+      "Payment gateway is not configured. Please set real RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in your environment variables."
+    );
+  }
+
   // Razorpay expects amount in paise (INR * 100)
   const amountInPaise = Math.round(order.totalAmount * 100);
 
   let razorpayOrder;
-  const isDummy = process.env.RAZORPAY_KEY_ID?.startsWith("rzp_test_dummy");
 
   if (isDummy) {
     // Generate a mock Razorpay order for development/testing sandbox
@@ -47,6 +62,7 @@ const createPaymentOrder = async (orderId, buyerId) => {
   }
 
   // Store payment record
+  const COMMISSION_RATE = await getCommissionRate();
   const commissionAmount = Math.round(order.totalAmount * COMMISSION_RATE * 100) / 100;
   const payment = await Payment.create({
     orderId,
@@ -160,21 +176,50 @@ const processRefund = async (orderId, requestedBy) => {
 };
 
 /**
- * Returns vendor payout history.
+ * Returns vendor payout history using an aggregation pipeline
+ * (efficient: filters seller orders in MongoDB, not in JS).
  * @param {string} sellerId
  */
 const getVendorPayouts = async (sellerId) => {
-  const payouts = await Payment.find({ status: PAYMENT_STATUS.PAID })
-    .populate({
-      path: "orderId",
-      match: { "items.sellerId": sellerId },
-      select: "totalAmount items createdAt",
-    })
-    .sort({ createdAt: -1 })
-    .lean();
+  const mongoose = require("mongoose");
+  const sellerObjId = new mongoose.Types.ObjectId(sellerId);
 
-  // Filter out null populated orders (those not belonging to this seller)
-  return payouts.filter((p) => p.orderId !== null);
+  const payouts = await Payment.aggregate([
+    // Only paid payments
+    { $match: { status: PAYMENT_STATUS.PAID } },
+    // Join order document
+    {
+      $lookup: {
+        from:         "orders",
+        localField:   "orderId",
+        foreignField: "_id",
+        as:           "order",
+      },
+    },
+    { $unwind: "$order" },
+    // Keep only orders that have at least one item from this seller
+    {
+      $match: {
+        "order.items.sellerId": sellerObjId,
+      },
+    },
+    // Shape the response
+    {
+      $project: {
+        amount:          1,
+        commissionAmount:1,
+        payoutAmount:    1,
+        status:          1,
+        createdAt:       1,
+        "order.totalAmount": 1,
+        "order.items":       1,
+        "order.createdAt":   1,
+      },
+    },
+    { $sort: { createdAt: -1 } },
+  ]);
+
+  return payouts;
 };
 
 module.exports = { createPaymentOrder, verifyPayment, processRefund, getVendorPayouts };

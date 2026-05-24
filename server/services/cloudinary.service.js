@@ -1,6 +1,13 @@
 const cloudinary = require("../config/cloudinary");
 const ApiError = require("../utils/ApiError");
 
+/** Returns true when Cloudinary is configured with placeholder/dummy keys */
+const isCloudinaryDummy = () =>
+  !process.env.CLOUDINARY_CLOUD_NAME ||
+  process.env.CLOUDINARY_CLOUD_NAME === "dummycloud" ||
+  !process.env.CLOUDINARY_API_KEY ||
+  process.env.CLOUDINARY_API_KEY === "123456789";
+
 /**
  * Uploads a buffer (from Multer memory storage) to Cloudinary.
  * @param {Buffer} fileBuffer - File buffer from req.file.buffer
@@ -8,6 +15,14 @@ const ApiError = require("../utils/ApiError");
  * @returns {Promise<{public_id: string, url: string}>}
  */
 const uploadToCloudinary = (fileBuffer, folder = "marketplace") => {
+  if (isCloudinaryDummy()) {
+    return Promise.reject(
+      new ApiError(
+        503,
+        "Image uploads are not configured. Please set real CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in your environment variables."
+      )
+    );
+  }
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {

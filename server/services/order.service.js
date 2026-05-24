@@ -3,7 +3,15 @@ const Product = require("../models/Product.model");
 const ApiError = require("../utils/ApiError");
 const { ORDER_STATUS, PAYMENT_STATUS } = require("../constants/orderStatus");
 
-const COMMISSION_RATE = parseFloat(process.env.PLATFORM_COMMISSION_RATE || "10") / 100;
+/** Reads commission rate from DB (persisted by admin) or falls back to env var */
+const getCommissionRate = async () => {
+  try {
+    const Setting = require("../models/Setting.model");
+    const s = await Setting.findOne({ key: "commissionRate" }).lean();
+    if (s?.value?.rate !== undefined) return parseFloat(s.value.rate) / 100;
+  } catch (_) { /* fall through */ }
+  return parseFloat(process.env.PLATFORM_COMMISSION_RATE || "10") / 100;
+};
 
 /**
  * Places a new order after validating stock and computing totals.
@@ -41,6 +49,7 @@ const placeOrder = async (buyerId, { items, shippingAddress }) => {
     await product.save();
   }
 
+  const COMMISSION_RATE  = await getCommissionRate();
   const commissionAmount = Math.round(totalAmount * COMMISSION_RATE * 100) / 100;
   const sellerEarnings   = totalAmount - commissionAmount;
 

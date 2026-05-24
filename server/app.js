@@ -22,7 +22,8 @@ const orderRoutes          = require("./routes/order.routes");
 const paymentRoutes        = require("./routes/payment.routes");
 const sellerRoutes         = require("./routes/seller.routes");
 const adminRoutes          = require("./routes/admin.routes");
-const recommendationRoutes = require("./routes/recommendation.routes");const settingsRoutes = require("./routes/settings.routes");
+const recommendationRoutes = require("./routes/recommendation.routes");
+const settingsRoutes       = require("./routes/settings.routes");
 // ── Logger ────────────────────────────────────────────────────────────────
 const logger = require("./utils/logger");
 

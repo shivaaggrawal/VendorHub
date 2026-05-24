@@ -166,6 +166,9 @@ const updateCommissionSettings = asyncHandler(async (req, res) => {
   if (rate === undefined || rate < 0 || rate > 100) {
     throw new ApiError(400, "Commission rate must be between 0 and 100.");
   }
+  // Persist to MongoDB so it survives server restarts
+  await settingsService.upsertSetting("commissionRate", { rate, updatedAt: new Date().toISOString() });
+  // Also update the running process so current requests pick it up immediately
   process.env.PLATFORM_COMMISSION_RATE = String(rate);
   return new ApiResponse(200, `Commission rate updated to ${rate}%.`, { rate }).send(res);
 });
