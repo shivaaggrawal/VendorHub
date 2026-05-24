@@ -1,0 +1,10 @@
+{
+  "name": "vendorhub-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "install-client": "npm install --prefix client",
+    "vercel-build": "npm run install-client && npm run build"
+  }
+}
