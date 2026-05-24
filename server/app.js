@@ -118,11 +118,13 @@ app.use(errorMiddleware);
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
-  await connectDB();
+  // Bind the port FIRST so Render always detects an open port,
+  // then connect to the database in the background.
   app.listen(PORT, () => {
     logger.info(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
     logger.info(`📡 Health check: http://localhost:${PORT}/health`);
   });
+  await connectDB();
 };
 
 // Unhandled promise rejections
