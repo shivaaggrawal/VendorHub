@@ -230,7 +230,7 @@ VITE_API_URL=http://localhost:5000/api
 ### Running the Backend Server
 ```bash
 cd server
-npm start # Starts node backend server at http://localhost:5000
+npm run dev # Starts node backend server at http://localhost:5000
 ```
 
 ### Running the Frontend Client
