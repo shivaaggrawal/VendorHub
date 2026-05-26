@@ -36,9 +36,7 @@ const drawerLinks = [
   { label: "Home", to: "/", icon: Home },
   { label: "Explore", to: "/explore", icon: Sparkles },
   { label: "Categories", to: "/categories", icon: Grid3X3 },
-  { label: "AI Recommendations", to: "/explore?ai=recommendations", icon: BarChart3 },
   { label: "Orders", to: "/orders/latest/tracking", icon: PackageCheck, auth: true },
-  { label: "Wishlist", to: "/explore?wishlist=true", icon: Heart },
   { label: "Seller Dashboard", to: "/seller/dashboard", icon: Store, roles: ["seller"] },
   { label: "Admin Dashboard", to: "/admin/dashboard", icon: BarChart3, roles: ["admin"] },
   { label: "Profile", to: "/login", icon: User },
@@ -46,7 +44,7 @@ const drawerLinks = [
 
 const bottomLinks = [
   { label: "Home", to: "/", icon: Home },
-  { label: "Wishlist", to: "/explore?wishlist=true", icon: Heart },
+  { label: "Explore", to: "/explore", icon: Sparkles },
   { label: "Cart", to: "/cart", icon: ShoppingBag, cart: true },
   { label: "Profile", to: "/login", icon: User },
 ];
@@ -354,7 +352,7 @@ const FloatingBottomNav = ({ cartCount, animateCart }) => {
       <div className="grid grid-cols-4 gap-1">
         {bottomLinks.map(({ label, to, icon: Icon, cart }) => {
           const finalTo = label === "Profile" && isAuthenticated ? "/profile" : to;
-          const active = location.pathname === finalTo || (label === "Wishlist" && location.search.includes("wishlist"));
+          const active = location.pathname === finalTo;
           return (
             <Link
               key={label}
@@ -445,12 +443,6 @@ const Navbar = () => {
                 <AISearchInput />
               </div>
               <div className="flex items-center gap-3">
-                <Link
-                  to="/explore?wishlist=true"
-                  className="grid h-10 w-10 place-items-center rounded-xl text-[#e1dcc9]/70 transition hover:bg-[#412d15]/45 hover:text-rose-500"
-                >
-                  <Heart className="h-5 w-5 transition-all duration-300 hover:fill-[#cc3333] hover:text-[#cc3333] hover:drop-shadow-[0_0_8px_rgba(204,51,51,0.5)]" />
-                </Link>
                 <Link
                   to="/cart"
                   className="relative grid h-10 w-10 place-items-center rounded-xl text-[#e1dcc9]/70 transition hover:bg-[#412d15]/45 hover:text-[#e1dcc9] cart-glow-target"
