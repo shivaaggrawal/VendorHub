@@ -103,7 +103,7 @@ function Login() {
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#e1dcc9]/35 group-focus-within:text-[#e1dcc9]/80 transition-colors duration-200" />
               <input
                 type="email"
-                placeholder="name@domain.com"
+                placeholder="user@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -130,7 +130,7 @@ function Login() {
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#e1dcc9]/35 group-focus-within:text-[#e1dcc9]/80 transition-colors duration-200" />
               <input
                 type="password"
-                placeholder="••••••••••••"
+                placeholder="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
