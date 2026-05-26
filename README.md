@@ -281,8 +281,21 @@ All API requests accept and return JSON payloads. Protected routes require autho
 ## 📸 Interface Screenshots Placeholder
 
 <div align="center">
-  <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800" alt="Boutique Settings Overview Screen" width="400" style="border-radius:10px; margin-right:10px;" />
-  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800" alt="Merchant Dashboard Interactive Graph Screen" width="400" style="border-radius:10px;" />
+  <img src="https://drive.google.com/uc?id=1N_gl6U2Q56m7P9c8qP1Y8TTVvLaT7Rd7" 
+     alt="Boutique Settings Overview Screen" 
+     width="400" 
+     style="border-radius:10px; margin-right:10px;" />
+
+<img src="https://drive.google.com/uc?id=1-EK2w8ToMcW65a1_qmCdzTH1TZLlW83j" 
+     alt="Merchant Dashboard Interactive Graph Screen" 
+     width="400" 
+     style="border-radius:10px;" />
+
+<img src="https://drive.google.com/uc?id=1ARrqBhfk-O02AczjjsnjGbAwCpc_BbFH" 
+     alt="Extra Screenshot" 
+     width="400" 
+     style="border-radius:10px; margin-top:10px;" />
+
 </div>
 
 ---
