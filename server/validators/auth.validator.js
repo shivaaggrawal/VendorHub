@@ -1,8 +1,8 @@
 const { body } = require("express-validator");
 
-/**
- * Validation rules for user registration.
- */
+
+
+
 const registerValidator = [
   body("name")
     .trim()
@@ -25,9 +25,9 @@ const registerValidator = [
     .isIn(["buyer", "seller"]).withMessage("Role must be buyer or seller"),
 ];
 
-/**
- * Validation rules for login.
- */
+
+
+
 const loginValidator = [
   body("email")
     .trim()

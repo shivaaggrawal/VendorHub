@@ -5,13 +5,13 @@ const API_URL = import.meta.env.VITE_API_URL || "https://vendorhub-dwpl.onrender
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
-  timeout: 90000, // 90-second timeout specifically configured to absorb Render cold starts
+  timeout: 90000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request Interceptor: Attach Token if stored in localStorage (if not relying solely on cookies)
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -20,7 +20,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response Interceptor: Handle Global Errors
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -28,7 +28,7 @@ api.interceptors.response.use(
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       try {
-        // Dynamically import store and logout slice action to resolve circular dependency
+
         const { default: store } = await import("../redux/store");
         const { logout } = await import("../redux/slices/authSlice");
         store.dispatch(logout());
@@ -36,7 +36,7 @@ api.interceptors.response.use(
         console.error("Failed to dynamically dispatch logout on 401:", err);
       }
     } else {
-      // Dispatches custom window event for automatic notification toasts
+
       const message =
         error.response?.data?.message ||
         error.response?.data?.errors?.[0]?.msg ||

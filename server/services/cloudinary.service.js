@@ -1,19 +1,19 @@
 const cloudinary = require("../config/cloudinary");
 const ApiError = require("../utils/ApiError");
 
-/** Returns true when Cloudinary is configured with placeholder/dummy keys */
+
 const isCloudinaryDummy = () =>
   !process.env.CLOUDINARY_CLOUD_NAME ||
   process.env.CLOUDINARY_CLOUD_NAME === "dummycloud" ||
   !process.env.CLOUDINARY_API_KEY ||
   process.env.CLOUDINARY_API_KEY === "123456789";
 
-/**
- * Uploads a buffer (from Multer memory storage) to Cloudinary.
- * @param {Buffer} fileBuffer - File buffer from req.file.buffer
- * @param {string} folder     - Cloudinary folder name
- * @returns {Promise<{public_id: string, url: string}>}
- */
+
+
+
+
+
+
 const uploadToCloudinary = (fileBuffer, folder = "marketplace") => {
   if (isCloudinaryDummy()) {
     return Promise.reject(
@@ -42,26 +42,26 @@ const uploadToCloudinary = (fileBuffer, folder = "marketplace") => {
   });
 };
 
-/**
- * Uploads multiple buffers concurrently.
- * @param {Express.Multer.File[]} files  - Array of Multer file objects
- * @param {string}                folder - Cloudinary folder
- * @returns {Promise<Array<{public_id, url}>>}
- */
+
+
+
+
+
+
 const uploadMultipleToCloudinary = async (files, folder = "marketplace/products") => {
   const uploads = files.map((file) => uploadToCloudinary(file.buffer, folder));
   return Promise.all(uploads);
 };
 
-/**
- * Deletes an image from Cloudinary by public_id.
- * @param {string} publicId
- */
+
+
+
+
 const deleteFromCloudinary = async (publicId) => {
   try {
     await cloudinary.uploader.destroy(publicId);
   } catch (error) {
-    // Non-fatal: log but don't throw
+
     console.error(`Failed to delete Cloudinary asset ${publicId}:`, error.message);
   }
 };

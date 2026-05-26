@@ -26,7 +26,7 @@ import ProductCard from "../components/ProductCard";
 import api from "../services/api";
 import { useDelayedLoader, LoaderWrapper } from "../lib/loadingUtils";
 
-/* ── Constants ─────────────────────────────────────────────── */
+
 const CATEGORIES = [
   {
     name: "All",
@@ -214,7 +214,7 @@ const FALLBACK_PRODUCTS = [
   },
 ];
 
-/* ── Animation Variants ────────────────────────────────────── */
+
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   visible: (i = 0) => ({
@@ -224,7 +224,7 @@ const fadeUp = {
   }),
 };
 
-/* ── Skeleton Card ─────────────────────────────────────────── */
+
 const SkeletonCard = () => (
   <div className="bg-card border border-[#412d15]/50 rounded-2xl overflow-hidden shadow-premium">
     <div className="aspect-[3/4] skeleton bg-[#1f150c]/60" />
@@ -239,30 +239,30 @@ const SkeletonCard = () => (
   </div>
 );
 
-/* ══════════════════════════════════════════════════════════════
-   EXPLORE PAGE
-   ══════════════════════════════════════════════════════════════ */
+
+
+
 const ExplorePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const wishlistMode = searchParams.get("wishlist") === "true";
 
-  /* ── State ───────────────────────────────────────────────── */
+
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const showLoader = useDelayedLoader(loading, { delay: 300, minimumShowTime: 500 });
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Advanced filters state
+
   const [selectedBrands, setSelectedBrands] = useState(new Set());
   const [selectedRating, setSelectedRating] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState("featured");
   const [renderedProducts, setRenderedProducts] = useState([]);
 
-  // Basic filters from URL
+
   const searchQuery = searchParams.get("search") || "";
   const activeCategory = searchParams.get("category") || "All";
   const activeTag = searchParams.get("tag") || "";
@@ -272,7 +272,7 @@ const ExplorePage = () => {
 
   const isSearching = searchQuery.trim().length > 0;
 
-  /* ── Fetch Products ──────────────────────────────────────── */
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -295,12 +295,12 @@ const ExplorePage = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Sync local search input with search query parameter changes
+
   useEffect(() => {
     setLocalSearch(searchQuery);
   }, [searchQuery]);
 
-  /* ── brand list derivation ────────────────────────────────── */
+
   const availableBrands = useMemo(() => {
     const brands = new Set();
     allProducts.forEach((p) => {
@@ -319,7 +319,7 @@ const ExplorePage = () => {
     return counts;
   }, [allProducts]);
 
-  /* ── Brand filter toggle helper ─────────────────────────────── */
+
   const toggleBrand = (brand) => {
     const next = new Set(selectedBrands);
     if (next.has(brand)) {
@@ -330,7 +330,7 @@ const ExplorePage = () => {
     setSelectedBrands(next);
   };
 
-  /* ── URL Updaters ────────────────────────────────────────── */
+
   const setCategory = (cat) => {
     const params = new URLSearchParams(searchParams);
     if (cat === "All") params.delete("category");
@@ -362,7 +362,7 @@ const ExplorePage = () => {
     setSortBy("featured");
   };
 
-  /* ── Filtered & Sorted Products ──────────────────────────── */
+
   const filtered = useMemo(() => {
     let results = [...allProducts];
 
@@ -378,7 +378,7 @@ const ExplorePage = () => {
       results = results.filter((p) => wishlistIds.has(p._id?.toString()));
     }
 
-    // Category filter
+
     if (activeCategory && activeCategory !== "All") {
       results = results.filter((p) => {
         const catName = typeof p.category === "object" ? p.category?.name : p.category;
@@ -390,7 +390,7 @@ const ExplorePage = () => {
       });
     }
 
-    // Search query filter
+
     if (searchQuery) {
       const terms = expandSearchTerms(searchQuery);
       results = results.filter((p) => {
@@ -399,7 +399,7 @@ const ExplorePage = () => {
       });
     }
 
-    // Brand Checklist filter
+
     if (selectedBrands.size > 0) {
       results = results.filter((p) => {
         const brand = p.sellerId?.storeName || p.sellerId?.name || "Generic Vendor";
@@ -407,7 +407,7 @@ const ExplorePage = () => {
       });
     }
 
-    // Star Rating filter
+
     if (selectedRating > 0) {
       results = results.filter((p) => {
         const ratingVal = Number(p.averageRating || p.rating || 0);
@@ -415,7 +415,7 @@ const ExplorePage = () => {
       });
     }
 
-    // Stock Status toggle filter
+
     if (inStockOnly) {
       results = results.filter((p) => {
         const stockVal = p.stock !== undefined ? p.stock : 1;
@@ -423,20 +423,20 @@ const ExplorePage = () => {
       });
     }
 
-    // Price range filters
+
     const min = parseFloat(minPrice);
     const max = parseFloat(maxPrice);
     if (!isNaN(min)) results = results.filter((p) => p.price >= min);
     if (!isNaN(max)) results = results.filter((p) => p.price <= max);
 
-    // Active discount tag filter
+
     if (activeTag === "deal") {
       results = results.filter(
         (p) => (p.originalPrice && p.originalPrice > p.price) || (p.discountedPrice && p.discountedPrice > p.price)
       );
     }
 
-    // --- SORTING MECHANISMS ---
+
     if (sortBy === "price-asc") {
       results.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
@@ -472,7 +472,7 @@ const ExplorePage = () => {
     wishlistMode
   ]);
 
-  // Synchronize dynamic caching state to preserve heights during refetches
+
   useEffect(() => {
     if (!loading && !error) {
       setRenderedProducts(filtered);
@@ -498,10 +498,10 @@ const ExplorePage = () => {
   const displayProducts = renderedProducts.length > 0 ? renderedProducts : filtered;
   const isInitialLoad = loading && displayProducts.length === 0;
 
-  /* ── Sidebar Component ───────────────────────────────────── */
+
   const SidebarContent = () => (
     <div className="space-y-8">
-      {/* Categories */}
+
       {!isSearching && (
         <div>
           <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-3">
@@ -537,7 +537,7 @@ const ExplorePage = () => {
         </div>
       )}
 
-      {/* Price Range */}
+
       <div>
         <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-3">
           Price Range
@@ -561,7 +561,7 @@ const ExplorePage = () => {
         </div>
       </div>
 
-      {/* Brand Checkboxes */}
+
       {availableBrands.length > 0 && (
         <div>
           <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-3">
@@ -569,7 +569,7 @@ const ExplorePage = () => {
           </h3>
           <div className="space-y-2 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
             {availableBrands.map((brand) => (
-              <label 
+              <label
                 key={brand}
                 className="flex items-center gap-3 px-1 py-1.5 text-xs font-bold uppercase tracking-wider cursor-pointer text-[#e1dcc9]/70 hover:text-[#e1dcc9] transition"
               >
@@ -589,7 +589,7 @@ const ExplorePage = () => {
         </div>
       )}
 
-      {/* Rating Filter */}
+
       <div>
         <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-3">
           Customer Rating
@@ -602,8 +602,8 @@ const ExplorePage = () => {
                 key={stars}
                 onClick={() => setSelectedRating(isSelected ? 0 : stars)}
                 className={`w-full flex items-center gap-2 px-2.5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition text-left border
-                  ${isSelected 
-                    ? "bg-[#e1dcc9]/10 text-[#e1dcc9] border-[#e1dcc9]/25 shadow-glow-gold/10" 
+                  ${isSelected
+                    ? "bg-[#e1dcc9]/10 text-[#e1dcc9] border-[#e1dcc9]/25 shadow-glow-gold/10"
                     : "text-muted-foreground border-transparent hover:bg-[#1f150c] hover:text-[#e1dcc9]"}`}
               >
                 <span className="flex gap-0.5">
@@ -621,7 +621,7 @@ const ExplorePage = () => {
         </div>
       </div>
 
-      {/* Stock Toggle */}
+
       <div>
         <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-3">
           Availability
@@ -641,7 +641,7 @@ const ExplorePage = () => {
         </label>
       </div>
 
-      {/* Active Filters */}
+
       {hasActiveFilters && (
         <div className="border-t border-[#412d15]/55 pt-6">
           <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-3">
@@ -705,7 +705,7 @@ const ExplorePage = () => {
   return (
     <div className="pt-6 sm:pt-10 pb-16 bg-[#0a0502] min-h-screen text-[#e1dcc9]">
       <div className="container mx-auto px-4 md:px-6">
-        {/* ── Header ───────────────────────────────────────── */}
+
         <motion.div
           className="mb-10"
           initial="hidden"
@@ -771,7 +771,7 @@ const ExplorePage = () => {
             </motion.div>
           </div>
 
-          {/* Search Bar */}
+
           <motion.form
             variants={fadeUp}
             custom={3}
@@ -796,7 +796,7 @@ const ExplorePage = () => {
             </Button>
           </motion.form>
 
-          {/* Explore Mode Category Image Slider */}
+
           {!isSearching && (
             <motion.div variants={fadeUp} custom={4} className="relative mt-7">
               <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-black to-transparent" />
@@ -851,16 +851,16 @@ const ExplorePage = () => {
           )}
         </motion.div>
 
-        {/* ── Layout: Sidebar + Grid ───────────────────────── */}
+
         <div className="flex gap-8">
-          {/* Desktop Sidebar */}
+
           <aside className="hidden md:block w-64 flex-shrink-0 border-r border-[#412d15]/30 pr-6">
             <div className="sticky top-28">
               <SidebarContent />
             </div>
           </aside>
 
-          {/* Mobile Sidebar Drawer */}
+
           <AnimatePresence>
             {sidebarOpen && (
               <>
@@ -895,9 +895,9 @@ const ExplorePage = () => {
             )}
           </AnimatePresence>
 
-          {/* ── Main Content ───────────────────────────────── */}
+
           <main className="flex-1 min-w-0">
-            {/* Utility Results Header and Toolbar Sorter */}
+
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-[#412d15]/40">
               <div>
                 <h2 className="text-sm font-black uppercase tracking-[0.16em] text-[#e1dcc9]">
@@ -924,7 +924,7 @@ const ExplorePage = () => {
               </div>
             </div>
 
-            {/* Error State */}
+
             {!loading && error && (
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -947,7 +947,7 @@ const ExplorePage = () => {
               </motion.div>
             )}
 
-            {/* Loading Skeletons */}
+
             {showLoader ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {Array.from({ length: 6 }, (_, i) => (
@@ -956,7 +956,7 @@ const ExplorePage = () => {
               </div>
             ) : (
               <>
-                {/* Empty State */}
+
                 {!loading && !error && displayProducts.length === 0 && (
                   <motion.div
                     initial={{ opacity: 0, y: 16 }}
@@ -972,7 +972,7 @@ const ExplorePage = () => {
                         Zero Matches Registered
                       </h3>
                       <p className="text-muted-foreground text-xs mb-6 max-w-sm leading-relaxed">
-                        {searchQuery 
+                        {searchQuery
                           ? `No drops matched "${searchQuery}". Please refine specifications or select another category.`
                           : "Try adjusting active criteria to discover matching boutique inventory."}
                       </p>
@@ -998,7 +998,7 @@ const ExplorePage = () => {
                   </motion.div>
                 )}
 
-                {/* Product Grid */}
+
                 {!error && displayProducts.length > 0 && (
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -1022,7 +1022,7 @@ const ExplorePage = () => {
               </>
             )}
 
-            {/* Results count bottom */}
+
             {!loading && !error && displayProducts.length > 0 && (
               <p className="mt-12 text-center text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                 Showing {displayProducts.length} premium catalog drop

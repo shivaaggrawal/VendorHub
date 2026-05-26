@@ -26,13 +26,13 @@ const categorySchema = new mongoose.Schema(
       default: null,
     },
     isActive: { type: Boolean, default: true },
-    // Commission override per category (null = use platform default)
+
     commissionRate: { type: Number, default: null },
   },
   { timestamps: true }
 );
 
-// Auto-generate slug from name before saving
+
 categorySchema.pre("save", function (next) {
   if (this.isModified("name")) {
     this.slug = this.name

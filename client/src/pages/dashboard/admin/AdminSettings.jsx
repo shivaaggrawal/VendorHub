@@ -9,7 +9,7 @@ export default function AdminSettings() {
   const [commissionRate, setCommissionRate] = useState(10);
   const [success, setSuccess] = useState(false);
 
-  // Update commission mutation
+
   const updateCommissionMutation = useMutation({
     mutationFn: async (rate) => {
       const res = await api.patch("/admin/settings/commission", { rate });
@@ -32,7 +32,7 @@ export default function AdminSettings() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      {/* Header */}
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
           Platform Parameters
@@ -48,7 +48,7 @@ export default function AdminSettings() {
         </div>
       )}
 
-      {/* Commission settings panel */}
+
       <div className="bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
 
@@ -63,7 +63,7 @@ export default function AdminSettings() {
             </div>
           </div>
 
-          {/* Interactive slider */}
+
           <div className="space-y-3 p-4 rounded-xl bg-black/35 border border-[#412d15]/50">
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground font-semibold">Global Commission Split</span>

@@ -32,12 +32,12 @@ export default function AdminOverview() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Fetch Platform Analytics from backend
-  const { 
-    data: analytics, 
-    isLoading: analyticsLoading, 
-    error: analyticsError, 
-    refetch: refetchAnalytics 
+
+  const {
+    data: analytics,
+    isLoading: analyticsLoading,
+    error: analyticsError,
+    refetch: refetchAnalytics
   } = useQuery({
     queryKey: ["adminAnalytics"],
     queryFn: async () => {
@@ -46,12 +46,12 @@ export default function AdminOverview() {
     },
   });
 
-  // Fetch Pending Vendors
-  const { 
-    data: pendingVendors, 
-    isLoading: vendorsLoading, 
-    error: vendorsError, 
-    refetch: refetchVendors 
+
+  const {
+    data: pendingVendors,
+    isLoading: vendorsLoading,
+    error: vendorsError,
+    refetch: refetchVendors
   } = useQuery({
     queryKey: ["pendingVendors"],
     queryFn: async () => {
@@ -60,7 +60,7 @@ export default function AdminOverview() {
     },
   });
 
-  // Approve Vendor Mutation
+
   const approveVendorMutation = useMutation({
     mutationFn: async (id) => {
       const res = await api.patch(`/admin/vendors/${id}/approve`);
@@ -76,7 +76,7 @@ export default function AdminOverview() {
     },
   });
 
-  // Reject Vendor Mutation
+
   const rejectVendorMutation = useMutation({
     mutationFn: async (id) => {
       const res = await api.patch(`/admin/vendors/${id}/reject`);
@@ -131,10 +131,10 @@ export default function AdminOverview() {
     };
     return (
       <div className="p-6">
-        <QueryErrorPlaceholder 
-          error={analyticsError || vendorsError} 
-          refetch={handleRefetchAll} 
-          message="Failed to load administrator dashboard command data." 
+        <QueryErrorPlaceholder
+          error={analyticsError || vendorsError}
+          refetch={handleRefetchAll}
+          message="Failed to load administrator dashboard command data."
         />
       </div>
     );
@@ -148,7 +148,7 @@ export default function AdminOverview() {
         animate="visible"
         className="space-y-8"
       >
-      {/* Title */}
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
           Administrator Command
@@ -161,7 +161,7 @@ export default function AdminOverview() {
         </p>
       </div>
 
-      {/* Stats Cards */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {statItems.map((item) => {
           const Icon = item.icon;
@@ -191,9 +191,9 @@ export default function AdminOverview() {
         })}
       </div>
 
-      {/* Main split grid */}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Pending Vendor Approvals Table */}
+
         <motion.div
           variants={itemVariants}
           className="lg:col-span-2 bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium relative overflow-hidden"
@@ -214,7 +214,7 @@ export default function AdminOverview() {
             </span>
           </div>
 
-          {/* Pending table */}
+
           <div className="space-y-4">
             {!pendingVendors || pendingVendors.length === 0 ? (
               <div className="p-12 border border-dashed border-[#412d15] rounded-xl text-center">
@@ -271,7 +271,7 @@ export default function AdminOverview() {
           </div>
         </motion.div>
 
-        {/* Elite Vendors Leaderboard Widget */}
+
         <motion.div
           variants={itemVariants}
           className="bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium flex flex-col justify-between"
@@ -287,7 +287,7 @@ export default function AdminOverview() {
               </div>
             </div>
 
-            {/* List */}
+
             <div className="space-y-3 mt-4">
               {analytics?.topVendors && analytics.topVendors.length > 0 ? (
                 analytics.topVendors.map((vendor, idx) => (

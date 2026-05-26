@@ -13,10 +13,10 @@ const paymentSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    amount: { type: Number, required: true }, // in INR paise (Razorpay standard)
+    amount: { type: Number, required: true },
     currency: { type: String, default: "INR" },
 
-    // Razorpay fields
+
     razorpayOrderId:   { type: String, required: true },
     razorpayPaymentId: { type: String, default: "" },
     razorpaySignature: { type: String, default: "" },
@@ -27,7 +27,7 @@ const paymentSchema = new mongoose.Schema(
       default: PAYMENT_STATUS.PENDING,
     },
 
-    // Refund tracking
+
     refundId:     { type: String, default: "" },
     refundAmount: { type: Number, default: 0 },
     refundStatus: {
@@ -37,7 +37,7 @@ const paymentSchema = new mongoose.Schema(
     },
     refundedAt: { type: Date, default: null },
 
-    // Seller payout tracking
+
     payoutStatus: {
       type: String,
       enum: ["pending", "processing", "paid"],
@@ -47,7 +47,7 @@ const paymentSchema = new mongoose.Schema(
     payoutDate:    { type: Date, default: null },
     payoutNote:    { type: String, default: "" },
 
-    // Platform commission snapshot
+
     commissionRate:   { type: Number, default: 0 },
     commissionAmount: { type: Number, default: 0 },
   },

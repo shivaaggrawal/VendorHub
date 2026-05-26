@@ -1,25 +1,25 @@
 const Product = require("../models/Product.model");
 const Order   = require("../models/Order.model");
 
-/**
- * AI Recommendation Engine
- * Separates products into 5 dynamically populated arrays:
- *  1. recommendedForYou (Personalized based on history/orders, fallback to top-rated)
- *  2. frequentlyBoughtTogether (Complementary items like accessories, bags, audio plugs)
- *  3. similarProducts (Similar to the last browsed item, fallback to similar of highest rated)
- *  4. trendingNearYou (Based on local trendingTags, rating velocities, and locations)
- *  5. inspiredByBrowsing (Browsing history tag match, fallback to editorial style-techwear items)
- *
- * @param {import("../models/User.model")} user - Optional authenticated user document
- * @param {number} [limit=12]
- * @returns {Promise<Object>} Redesigned structured recommendations object
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
 const getRecommendations = async (user, limit = 12) => {
   const excludedIds = new Set();
   const categoryWeights  = {};
   const tagWeights       = {};
 
-  // Helper to fetch populated products
+
   const fetchProducts = async (query, sort = { averageRating: -1, createdAt: -1 }, sliceLimit = limit) => {
     return await Product.find(query)
       .populate("category", "name slug")
@@ -29,14 +29,14 @@ const getRecommendations = async (user, limit = 12) => {
       .lean();
   };
 
-  // 1. Extract signals if user is authenticated
+
   let hasSignals = false;
   let preferredCategories = [];
   let preferredTags = [];
   let lastBrowsedProductId = null;
 
   if (user) {
-    // A. Browsing history signal
+
     if (user.browsingHistory && user.browsingHistory.length > 0) {
       hasSignals = true;
       const browsedIds = user.browsingHistory
@@ -53,7 +53,7 @@ const getRecommendations = async (user, limit = 12) => {
         .lean();
 
       browsedProducts.forEach((p, i) => {
-        const weight = 1 / (i + 1); // decay
+        const weight = 1 / (i + 1);
         const catKey = p.category?.toString();
         if (catKey) categoryWeights[catKey] = (categoryWeights[catKey] || 0) + weight * 2.0;
         (p.tags || []).forEach((tag) => {
@@ -62,7 +62,7 @@ const getRecommendations = async (user, limit = 12) => {
       });
     }
 
-    // B. Past orders signal
+
     const pastOrders = await Order.find({ buyerId: user._id })
       .select("items")
       .limit(10)
@@ -108,7 +108,7 @@ const getRecommendations = async (user, limit = 12) => {
       .map(([tag]) => tag);
   }
 
-  // ─── SEGMENT 1: Recommended For You ───────────────────────
+
   let recommendedForYou = [];
   if (hasSignals && (preferredCategories.length > 0 || preferredTags.length > 0)) {
     const query = {
@@ -122,7 +122,7 @@ const getRecommendations = async (user, limit = 12) => {
     recommendedForYou = await fetchProducts(query, { averageRating: -1, createdAt: -1 }, limit);
   }
 
-  // Fallback or padding
+
   if (recommendedForYou.length < 4) {
     const padCount = limit - recommendedForYou.length;
     const existingIds = recommendedForYou.map((p) => p._id.toString());
@@ -137,8 +137,8 @@ const getRecommendations = async (user, limit = 12) => {
     recommendedForYou = [...recommendedForYou, ...fallbackRecs];
   }
 
-  // ─── SEGMENT 2: Frequently Bought Together ────────────────
-  // Upsell complementary accessories/wearables/essential pairs
+
+
   const complementaryTags = [
     "accessory", "wireless", "tws", "earbuds", "headphones",
     "mouse", "keyboard", "smart ring", "shoes", "sling", "bag"
@@ -171,12 +171,12 @@ const getRecommendations = async (user, limit = 12) => {
     frequentlyBoughtTogether = [...frequentlyBoughtTogether, ...fallbackFBT];
   }
 
-  // ─── SEGMENT 3: Similar Products ──────────────────────────
+
   let similarProducts = [];
   if (lastBrowsedProductId) {
     similarProducts = await getSimilarProducts(lastBrowsedProductId, limit);
   } else {
-    // Guest fallback: similar to the highest-rated product in the catalog
+
     const highestRated = await Product.findOne({ isActive: true }).sort({ averageRating: -1, numReviews: -1 }).lean();
     if (highestRated) {
       similarProducts = await getSimilarProducts(highestRated._id.toString(), limit);
@@ -196,13 +196,13 @@ const getRecommendations = async (user, limit = 12) => {
     similarProducts = [...similarProducts, ...fallbackSim];
   }
 
-  // ─── SEGMENT 4: Trending Near You ──────────────────────────
+
   const trendingQuery = {
     isActive: true,
     _id: { $nin: Array.from(excludedIds) }
   };
 
-  // If user has default shipping address, prioritize products from sellers nearby or matching location
+
   let prioritizedLocation = null;
   if (user && user.addresses && user.addresses.length > 0) {
     const defaultAddr = user.addresses.find((a) => a.isDefault) || user.addresses[0];
@@ -211,7 +211,7 @@ const getRecommendations = async (user, limit = 12) => {
 
   let trendingNearYou = [];
   if (prioritizedLocation) {
-    // Fetch sellers in this location first
+
     trendingNearYou = await fetchProducts(
       {
         ...trendingQuery,
@@ -222,7 +222,7 @@ const getRecommendations = async (user, limit = 12) => {
     );
   }
 
-  // Pad with global trending items
+
   if (trendingNearYou.length < 4) {
     const existingIds = trendingNearYou.map((p) => p._id.toString());
     const globalTrending = await fetchProducts(
@@ -237,7 +237,7 @@ const getRecommendations = async (user, limit = 12) => {
     trendingNearYou = [...trendingNearYou, ...globalTrending];
   }
 
-  // Ultimate fallback if still low
+
   if (trendingNearYou.length < 4) {
     const existingIds = trendingNearYou.map((p) => p._id.toString());
     const extraTrend = await fetchProducts(
@@ -251,7 +251,7 @@ const getRecommendations = async (user, limit = 12) => {
     trendingNearYou = [...trendingNearYou, ...extraTrend];
   }
 
-  // ─── SEGMENT 5: Inspired By Your Browsing ─────────────────
+
   let inspiredByBrowsing = [];
   if (hasSignals && (preferredCategories.length > 0 || preferredTags.length > 0)) {
     inspiredByBrowsing = await fetchProducts(
@@ -267,7 +267,7 @@ const getRecommendations = async (user, limit = 12) => {
       limit
     );
   } else {
-    // Guest fallback: Editorial techwear / high-fashion / modern cyberpunk aesthetic curation
+
     inspiredByBrowsing = await fetchProducts(
       {
         isActive: true,
@@ -289,7 +289,7 @@ const getRecommendations = async (user, limit = 12) => {
         isActive: true,
         _id: { $nin: [...Array.from(excludedIds), ...existingIds] }
       },
-      { price: -1 }, // Show high-value inspirational luxury products
+      { price: -1 },
       limit - inspiredByBrowsing.length
     );
     inspiredByBrowsing = [...inspiredByBrowsing, ...luxuryPadded];
@@ -304,11 +304,11 @@ const getRecommendations = async (user, limit = 12) => {
   };
 };
 
-/**
- * Returns "More like this" — products sharing category/tags with a given product.
- * @param {string} productId
- * @param {number} [limit=8]
- */
+
+
+
+
+
 const getSimilarProducts = async (productId, limit = 8) => {
   const product = await Product.findById(productId).select("category tags").lean();
   if (!product) return [];

@@ -1,10 +1,10 @@
 import React from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
-/**
- * Premium Luxury-themed Retry-Capable Query Error Placeholder Component
- * Standardizes fetch failures across tables, lists, and charts.
- */
+
+
+
+
 export default function QueryErrorPlaceholder({
   error,
   refetch,

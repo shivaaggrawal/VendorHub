@@ -69,7 +69,7 @@ const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
   token: localStorage.getItem("token") || null,
   isAuthenticated: !!localStorage.getItem("token"),
-  status: "idle", // idle | loading | succeeded | failed
+  status: "idle",
   error: null,
   isInitializing: !!localStorage.getItem("token"),
 };

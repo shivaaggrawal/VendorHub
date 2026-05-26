@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search, Sparkles, Clock, X, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// AI Synonym Dictionary
+
 const AI_SYNONYMS = {
   phone: "smartphones, iPhones, Android phones, mobile accessories",
   mobile: "smartphones, Android phones, iPhones, wireless accessories",
@@ -17,7 +17,7 @@ const AI_SYNONYMS = {
   gadget: "AI gadgets, smart devices, futuristic accessories",
 };
 
-// Static trending terms
+
 const TRENDING_SEARCHES = [
   "iPhone 15 Pro",
   "gaming laptop",
@@ -47,7 +47,7 @@ export default function AISearchInput({ isMobile = false }) {
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Typing effect
+
   useEffect(() => {
     let currentPhraseIdx = 0;
     let currentCharIdx = 0;
@@ -56,13 +56,13 @@ export default function AISearchInput({ isMobile = false }) {
 
     const handleType = () => {
       const currentPhrase = PLACEHOLDER_PHRASES[currentPhraseIdx];
-      
+
       if (!isDeleting) {
         setPlaceholderText(currentPhrase.substring(0, currentCharIdx + 1));
         currentCharIdx++;
 
         if (currentCharIdx === currentPhrase.length) {
-          // Pause at end
+
           typingTimer = setTimeout(() => {
             isDeleting = true;
             handleType();
@@ -80,7 +80,7 @@ export default function AISearchInput({ isMobile = false }) {
           return;
         }
       }
-      
+
       typingTimer = setTimeout(handleType, isDeleting ? 30 : 70);
     };
 
@@ -88,7 +88,7 @@ export default function AISearchInput({ isMobile = false }) {
     return () => clearTimeout(typingTimer);
   }, []);
 
-  // Load recent searches from localStorage
+
   useEffect(() => {
     const saved = localStorage.getItem("vendorhub_recent_searches");
     if (saved) {
@@ -100,7 +100,7 @@ export default function AISearchInput({ isMobile = false }) {
     }
   }, []);
 
-  // Sync predictions and AI synonyms
+
   useEffect(() => {
     if (!query.trim()) {
       setPredictions([]);
@@ -109,8 +109,8 @@ export default function AISearchInput({ isMobile = false }) {
     }
 
     const lowerQuery = query.toLowerCase().trim();
-    
-    // Check AI synonyms
+
+
     let match = "";
     for (const [key, value] of Object.entries(AI_SYNONYMS)) {
       if (key.includes(lowerQuery) || lowerQuery.includes(key)) {
@@ -120,18 +120,18 @@ export default function AISearchInput({ isMobile = false }) {
     }
     setSynonymMatch(match);
 
-    // Dynamic suggestions (mocking AI suggestion flow based on matched terms)
+
     const baseSuggestions = [
       query,
       match ? match : `${query} premium edition`,
       `${query} designer series`,
     ].filter(Boolean);
 
-    // Keep unique list
+
     setPredictions([...new Set(baseSuggestions)]);
   }, [query]);
 
-  // Handle outside clicks
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !inputRef.current.contains(event.target)) {
@@ -160,7 +160,7 @@ export default function AISearchInput({ isMobile = false }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (activeIndex >= 0) {
-      // Execute keyboard selected item
+
       if (predictions[activeIndex]) {
         performSearch(predictions[activeIndex]);
       }
@@ -223,7 +223,7 @@ export default function AISearchInput({ isMobile = false }) {
         </div>
       </form>
 
-      {/* Predictions Dropdown */}
+
       <AnimatePresence>
         {isFocused && (
           <motion.div
@@ -234,7 +234,7 @@ export default function AISearchInput({ isMobile = false }) {
             transition={{ duration: 0.2 }}
             className="absolute left-0 right-0 top-full mt-2 max-h-[360px] overflow-y-auto rounded-xl border border-border bg-[#1f150c]/95 backdrop-blur-2xl p-4 shadow-premium-hover z-50"
           >
-            {/* AI Synonym Suggester Banner */}
+
             {synonymMatch && (
               <div className="mb-3.5 p-3 rounded-lg bg-[#412d15]/50 border border-[#e1dcc9]/10 flex items-start gap-2.5">
                   <Sparkles className="w-4 h-4 text-[#e1dcc9] shrink-0 mt-0.5" />
@@ -247,7 +247,7 @@ export default function AISearchInput({ isMobile = false }) {
               </div>
             )}
 
-            {/* Dynamic Suggestions List */}
+
             {query.trim().length > 0 ? (
               <div className="space-y-1">
                 <p className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-1.5 px-2">AI Search Suggestions</p>
@@ -268,7 +268,7 @@ export default function AISearchInput({ isMobile = false }) {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Recent Searches */}
+
                 {recentSearches.length > 0 && (
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-2 px-1 flex items-center gap-1.5">
@@ -295,7 +295,7 @@ export default function AISearchInput({ isMobile = false }) {
                   </div>
                 )}
 
-                {/* Trending Items */}
+
                 <div>
                   <p className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-2 px-1 flex items-center gap-1.5">
                     <TrendingUp className="w-3 h-3 text-[#e1dcc9]" />

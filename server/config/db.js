@@ -8,13 +8,13 @@ const connectDB = async () => {
   }
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 10000, // 10 s timeout
+      serverSelectionTimeoutMS: 10000,
     });
     logger.info(` MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     logger.error(` MongoDB Connection Error: ${error.message}`);
-    // Give the server a moment to keep listening so Render can detect the port,
-    // then exit so the service restarts with a proper error in the logs.
+
+
     setTimeout(() => process.exit(1), 3000);
   }
 };

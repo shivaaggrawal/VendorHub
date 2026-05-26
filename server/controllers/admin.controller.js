@@ -9,7 +9,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const settingsService = require("../services/settings.service");
 const { PAYMENT_STATUS } = require("../constants/orderStatus");
 
-// ── GET /api/admin/analytics ──────────────────────────────────────────────
+
 const getPlatformAnalytics = asyncHandler(async (_req, res) => {
   const [
     totalUsers,
@@ -30,7 +30,7 @@ const getPlatformAnalytics = asyncHandler(async (_req, res) => {
       { $match: { paymentStatus: PAYMENT_STATUS.PAID } },
       { $group: { _id: null, totalRevenue: { $sum: "$totalAmount" }, totalCommission: { $sum: "$commissionAmount" } } },
     ]),
-    // Top 5 vendors by earnings
+
     Order.aggregate([
       { $match: { paymentStatus: PAYMENT_STATUS.PAID } },
       { $unwind: "$items" },
@@ -41,7 +41,7 @@ const getPlatformAnalytics = asyncHandler(async (_req, res) => {
       { $unwind: "$seller" },
       { $project: { totalSales: 1, orderCount: 1, "seller.name": 1, "seller.storeName": 1 } },
     ]),
-    // Top 5 categories by product count
+
     Product.aggregate([
       { $match: { isActive: true } },
       { $group: { _id: "$category", productCount: { $sum: 1 } } },
@@ -63,7 +63,7 @@ const getPlatformAnalytics = asyncHandler(async (_req, res) => {
   }).send(res);
 });
 
-// ── GET /api/admin/vendors/pending ────────────────────────────────────────
+
 const getPendingVendors = asyncHandler(async (_req, res) => {
   const vendors = await User.find({ role: "seller", isVendorApproved: false })
     .select("name email storeName vendorLocation createdAt")
@@ -72,7 +72,7 @@ const getPendingVendors = asyncHandler(async (_req, res) => {
   return new ApiResponse(200, "Pending vendors fetched.", vendors).send(res);
 });
 
-// ── PATCH /api/admin/vendors/:id/approve ─────────────────────────────────
+
 const approveVendor = asyncHandler(async (req, res) => {
   const vendor = await User.findOneAndUpdate(
     { _id: req.params.id, role: "seller" },
@@ -83,7 +83,7 @@ const approveVendor = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Vendor approved successfully.", vendor).send(res);
 });
 
-// ── PATCH /api/admin/vendors/:id/reject ──────────────────────────────────
+
 const rejectVendor = asyncHandler(async (req, res) => {
   const vendor = await User.findOneAndUpdate(
     { _id: req.params.id, role: "seller" },
@@ -94,7 +94,7 @@ const rejectVendor = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Vendor rejected.", vendor).send(res);
 });
 
-// ── GET /api/admin/users ──────────────────────────────────────────────────
+
 const getAllUsers = asyncHandler(async (req, res) => {
   const { page = 1, limit = 20, role } = req.query;
   const filter = role ? { role } : {};
@@ -111,7 +111,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
-// ── PATCH /api/admin/users/:id/toggle-active ─────────────────────────────
+
 const toggleUserActive = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) throw new ApiError(404, "User not found.");
@@ -120,7 +120,7 @@ const toggleUserActive = asyncHandler(async (req, res) => {
   return new ApiResponse(200, `User ${user.isActive ? "activated" : "deactivated"}.`, { isActive: user.isActive }).send(res);
 });
 
-// ── Category management ───────────────────────────────────────────────────
+
 const createCategory = asyncHandler(async (req, res) => {
   const category = await Category.create(req.body);
   return new ApiResponse(201, "Category created.", category).send(res);
@@ -143,7 +143,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Category deleted.").send(res);
 });
 
-// ── GET /api/admin/orders ─────────────────────────────────────────────────
+
 const getAllOrders = asyncHandler(async (req, res) => {
   const { page = 1, limit = 20, status } = req.query;
   const filter = status ? { orderStatus: status } : {};
@@ -160,20 +160,20 @@ const getAllOrders = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
-// ── PATCH /api/admin/settings/commission ─────────────────────────────────
+
 const updateCommissionSettings = asyncHandler(async (req, res) => {
   const { rate } = req.body;
   if (rate === undefined || rate < 0 || rate > 100) {
     throw new ApiError(400, "Commission rate must be between 0 and 100.");
   }
-  // Persist to MongoDB so it survives server restarts
+
   await settingsService.upsertSetting("commissionRate", { rate, updatedAt: new Date().toISOString() });
-  // Also update the running process so current requests pick it up immediately
+
   process.env.PLATFORM_COMMISSION_RATE = String(rate);
   return new ApiResponse(200, `Commission rate updated to ${rate}%.`, { rate }).send(res);
 });
 
-// ── PATCH /api/admin/settings/timer ─────────────────────────────────────
+
 const updateTimerSettings = asyncHandler(async (req, res) => {
   const { hours } = req.body;
   if (hours === undefined || hours === null) {
@@ -196,7 +196,7 @@ const updateTimerSettings = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Countdown timer updated.", setting.value).send(res);
 });
 
-// ── POST /api/admin/orders/:id/refund ────────────────────────────────────
+
 const adminRefund = asyncHandler(async (req, res) => {
   const paymentService = require("../services/payment.service");
   const payment = await paymentService.processRefund(req.params.id, "admin");

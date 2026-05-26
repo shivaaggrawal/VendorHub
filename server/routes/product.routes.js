@@ -11,7 +11,7 @@ const {
   createProductValidator, updateProductValidator, reviewValidator,
 } = require("../validators/product.validator");
 
-// ── Public ────────────────────────────────────────────────────────────────
+
 const { getAllCategories } = require("../controllers/admin.controller");
 
 router.get("/",              getAllProducts);
@@ -19,7 +19,7 @@ router.get("/search",        searchProducts);
 router.get("/categories",    getAllCategories);
 router.get("/:id",           optionalVerifyToken, getProduct);
 
-// ── Seller only ───────────────────────────────────────────────────────────
+
 router.post(
   "/",
   verifyToken,
@@ -42,7 +42,7 @@ router.put(
 
 router.delete("/:id", verifyToken, checkRole(["seller", "admin"]), deleteProduct);
 
-// ── Buyer — add review ────────────────────────────────────────────────────
+
 router.post("/:id/reviews", verifyToken, checkRole(["buyer"]), reviewValidator, addReview);
 
 module.exports = router;

@@ -1,8 +1,8 @@
 const { body } = require("express-validator");
 
-/**
- * Validation rules for product creation.
- */
+
+
+
 const createProductValidator = [
   body("title")
     .trim()
@@ -31,9 +31,9 @@ const createProductValidator = [
     .isArray().withMessage("Tags must be an array"),
 ];
 
-/**
- * Validation rules for product update (all fields optional).
- */
+
+
+
 const updateProductValidator = [
   body("title")
     .optional()
@@ -49,9 +49,9 @@ const updateProductValidator = [
     .isInt({ min: 0 }).withMessage("Stock must be a non-negative integer"),
 ];
 
-/**
- * Validation rules for adding a product review.
- */
+
+
+
 const reviewValidator = [
   body("rating")
     .notEmpty().withMessage("Rating is required")

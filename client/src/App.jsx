@@ -10,7 +10,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Loader from "./components/Loader";
 import { useDelayedLoader, DelayedSuspenseFallback, GlobalTopBarLoader } from "./lib/loadingUtils";
 
-// Lazy-loaded pages
+
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const ExplorePage = lazy(() => import("./pages/ExplorePage"));
 const ProductDetails = lazy(() => import("./pages/ProductDetails"));
@@ -49,7 +49,7 @@ function App() {
       <Suspense fallback={<DelayedSuspenseFallback text="Calibrating premium boutique elements..." />}>
         <AnimatePresence mode="wait">
           <Routes>
-            {/* Public Layout */}
+
             <Route element={<RootLayout />}>
               <Route path="/" element={<LandingPage />} />
               <Route path="/explore" element={<ExplorePage />} />
@@ -76,13 +76,13 @@ function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
 
-            {/* Auth Layout */}
+
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Route>
 
-            {/* Dashboard Layout */}
+
             <Route element={<DashboardLayout role="seller" />}>
               <Route path="/seller/dashboard" element={<ProtectedRoute roles={["seller"]}><SellerDashboard view="overview" /></ProtectedRoute>} />
               <Route path="/seller/products" element={<ProtectedRoute roles={["seller"]}><SellerDashboard view="products" /></ProtectedRoute>} />
@@ -90,7 +90,7 @@ function App() {
               <Route path="/seller/analytics" element={<ProtectedRoute roles={["seller"]}><SellerDashboard view="analytics" /></ProtectedRoute>} />
               <Route path="/seller/settings" element={<ProtectedRoute roles={["seller"]}><SellerDashboard view="settings" /></ProtectedRoute>} />
             </Route>
-            
+
             <Route element={<DashboardLayout role="admin" />}>
               <Route path="/admin/dashboard" element={<ProtectedRoute roles={["admin"]}><AdminDashboard view="overview" /></ProtectedRoute>} />
               <Route path="/admin/products" element={<ProtectedRoute roles={["admin"]}><AdminDashboard view="products" /></ProtectedRoute>} />

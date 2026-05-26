@@ -1,8 +1,8 @@
 const { body } = require("express-validator");
 
-/**
- * Validation rules for placing an order.
- */
+
+
+
 const placeOrderValidator = [
   body("items")
     .isArray({ min: 1 }).withMessage("Order must contain at least one item"),

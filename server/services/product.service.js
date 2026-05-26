@@ -2,10 +2,10 @@ const Fuse = require("fuse.js");
 const Product = require("../models/Product.model");
 const ApiError = require("../utils/ApiError");
 
-/**
- * Builds a MongoDB filter query from request query params.
- * Supports: category, minPrice, maxPrice, minRating, vendorLocation, isActive
- */
+
+
+
+
 const buildProductFilter = (query) => {
   const filter = { isActive: true };
 
@@ -22,9 +22,9 @@ const buildProductFilter = (query) => {
   return filter;
 };
 
-/**
- * Returns paginated, sorted, filtered products.
- */
+
+
+
 const getProducts = async (query) => {
   const {
     page = 1,
@@ -36,7 +36,7 @@ const getProducts = async (query) => {
 
   const filter = buildProductFilter(query);
 
-  // Text search (MongoDB text index)
+
   if (search) {
     filter.$text = { $search: search };
   }
@@ -64,9 +64,9 @@ const getProducts = async (query) => {
   };
 };
 
-/**
- * Returns a single product by ID and updates buyer's browsing history.
- */
+
+
+
 const getProductById = async (productId, user = null) => {
   const product = await Product.findById(productId)
     .populate("category", "name slug")
@@ -77,7 +77,7 @@ const getProductById = async (productId, user = null) => {
     throw new ApiError(404, "Product not found.");
   }
 
-  // Update browsing history asynchronously
+
   if (user) {
     user.addToBrowsingHistory(productId).catch(() => {});
   }
@@ -85,9 +85,9 @@ const getProductById = async (productId, user = null) => {
   return product;
 };
 
-/**
- * Creates a new product for a seller.
- */
+
+
+
 const createProduct = async (data, sellerId, imageFiles = []) => {
   const { uploadMultipleToCloudinary } = require("./cloudinary.service");
 
@@ -102,17 +102,17 @@ const createProduct = async (data, sellerId, imageFiles = []) => {
   return product;
 };
 
-/**
- * Updates a product owned by the given seller.
- */
+
+
+
 const updateProduct = async (productId, sellerId, updates, imageFiles = [], isAdmin = false) => {
   const product = await Product.findOne(isAdmin ? { _id: productId } : { _id: productId, sellerId });
   if (!product) throw new ApiError(404, "Product not found or unauthorized.");
 
-  // Upload new images if provided
+
   if (imageFiles.length > 0) {
     const { uploadMultipleToCloudinary, deleteFromCloudinary } = require("./cloudinary.service");
-    // Remove old images from Cloudinary
+
     for (const img of product.images) await deleteFromCloudinary(img.public_id);
     updates.images = await uploadMultipleToCloudinary(imageFiles, "marketplace/products");
   }
@@ -122,9 +122,9 @@ const updateProduct = async (productId, sellerId, updates, imageFiles = [], isAd
   return product;
 };
 
-/**
- * Soft-deletes a product (sets isActive=false).
- */
+
+
+
 const deleteProduct = async (productId, sellerId, isAdmin = false) => {
   const query = isAdmin ? { _id: productId } : { _id: productId, sellerId };
   const product = await Product.findOne(query);
@@ -134,14 +134,14 @@ const deleteProduct = async (productId, sellerId, isAdmin = false) => {
   await product.save();
 };
 
-/**
- * Adds/updates a review on a product (one review per user).
- */
+
+
+
 const addReview = async (productId, userId, { rating, comment }) => {
   const product = await Product.findById(productId);
   if (!product) throw new ApiError(404, "Product not found.");
 
-  // Remove existing review from this user
+
   product.reviews = product.reviews.filter(
     (r) => r.user.toString() !== userId.toString()
   );

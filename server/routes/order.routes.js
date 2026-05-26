@@ -8,7 +8,7 @@ const { placeOrderValidator }    = require("../validators/order.validator");
 
 router.use(verifyToken);
 
-// Buyer
+
 router.post("/",               checkRole(["buyer"]),          placeOrderValidator, placeOrder);
 router.get("/",                checkRole(["buyer"]),          getMyOrders);
 router.get("/:id",             getOrderById);

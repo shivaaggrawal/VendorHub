@@ -34,7 +34,7 @@ export default function SellerOrders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [statusNote, setStatusNote] = useState("");
 
-  // Fetch incoming orders for the seller
+
   const { data: orders, isLoading, error, refetch } = useQuery({
     queryKey: ["sellerOrders"],
     queryFn: async () => {
@@ -43,7 +43,7 @@ export default function SellerOrders() {
     },
   });
 
-  // Status transition mutation
+
   const updateStatusMutation = useMutation({
     mutationFn: async ({ orderId, nextStatus }) => {
       const res = await api.patch(`/orders/${orderId}/status`, {
@@ -54,7 +54,7 @@ export default function SellerOrders() {
     },
     onSuccess: (updatedOrder) => {
       queryClient.invalidateQueries({ queryKey: ["sellerOrders"] });
-      // Update local drawer state with updated order
+
       setSelectedOrder(updatedOrder);
       setStatusNote("");
       toast.success(`Advanced order pipeline to "${updatedOrder.orderStatus}" successfully!`);
@@ -81,7 +81,7 @@ export default function SellerOrders() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Incoming Orders
@@ -91,7 +91,7 @@ export default function SellerOrders() {
         </p>
       </div>
 
-      {/* Orders Grid/Table */}
+
       <div className="bg-[#1f150c]/10 border border-[#412d15]/30 rounded-2xl overflow-hidden shadow-premium">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -194,11 +194,11 @@ export default function SellerOrders() {
         </div>
       </div>
 
-      {/* AI Drawer Timeline overlay */}
+
       <AnimatePresence>
         {selectedOrder && (
           <div className="fixed inset-0 z-50 flex justify-end">
-            {/* Backdrop */}
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -207,7 +207,7 @@ export default function SellerOrders() {
               className="absolute inset-0 bg-black/75 backdrop-blur-md"
             />
 
-            {/* Sidebar Drawer */}
+
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -215,10 +215,10 @@ export default function SellerOrders() {
               transition={{ type: "spring", damping: 26, stiffness: 220 }}
               className="bg-[#1f150c] border-l border-[#412d15] w-full max-w-md h-full relative p-6 shadow-2xl z-10 flex flex-col justify-between"
             >
-              {/* Gold light overlay */}
+
               <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-              {/* Drawer Header */}
+
               <div>
                 <div className="flex items-center justify-between border-b border-[#412d15] pb-4 mb-6">
                   <div className="flex items-center gap-2">
@@ -238,7 +238,7 @@ export default function SellerOrders() {
                   </button>
                 </div>
 
-                {/* Items in Order */}
+
                 <div className="space-y-3 mb-6">
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Purchased Items</h4>
                   {selectedOrder.items?.map((item, idx) => (
@@ -264,7 +264,7 @@ export default function SellerOrders() {
                   ))}
                 </div>
 
-                {/* Shipping Location */}
+
                 <div className="p-4 rounded-xl bg-[#412d15]/15 border border-[#412d15]/50 text-xs space-y-2 mb-6">
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5" /> Shipping Address
@@ -280,17 +280,17 @@ export default function SellerOrders() {
                   </div>
                 </div>
 
-                {/* AI Interactive Timeline */}
+
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">AI Tracking Timeline</h4>
                   <div className="relative pl-6 border-l-2 border-[#412d15] space-y-6">
                     {ORDER_STATUS_STEPS.map((status, index) => {
                       const isCompleted = ORDER_STATUS_STEPS.indexOf(selectedOrder.orderStatus) >= index;
                       const isCurrent = selectedOrder.orderStatus === status;
-                      
+
                       return (
                         <div key={status} className="relative">
-                          {/* Timeline node */}
+
                           <div
                             className={`absolute -left-[31px] top-0.5 w-4 h-4 rounded-full border flex items-center justify-center text-[8px] transition-all duration-300 ${
                               isCompleted
@@ -324,7 +324,7 @@ export default function SellerOrders() {
                 </div>
               </div>
 
-              {/* Status Actions Drawer Bottom */}
+
               <div className="border-t border-[#412d15] pt-4 mt-6 bg-[#1f150c] space-y-3">
                 {getNextStatus(selectedOrder.orderStatus) && selectedOrder.orderStatus !== "Cancelled" ? (
                   <>

@@ -68,7 +68,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
 
-  // Buy Now checkout states
+
   const [showBuyNowModal, setShowBuyNowModal] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [checkoutError, setCheckoutError] = useState(null);
@@ -120,7 +120,7 @@ const ProductDetails = () => {
 
   const handleBuyNow = () => {
     if (!isAuthenticated) {
-      // Enforce security: redirect to login if unauthenticated
+
       navigate(`/login?redirect=/product/${id}`);
       return;
     }
@@ -164,7 +164,7 @@ const ProductDetails = () => {
       });
       const paymentData = paymentResponse.data?.data || {};
 
-      // If dummy/developer key, directly verify payment after simulated secure processing
+
       if (paymentData.keyId?.startsWith("rzp_test_dummy")) {
         setTimeout(async () => {
           try {
@@ -260,7 +260,7 @@ const ProductDetails = () => {
   const rating = product?.averageRating || 4.8;
   const numReviews = product?.numReviews || 124;
 
-  // Loading state
+
   return (
     <LoaderWrapper
       loading={loading}
@@ -278,7 +278,7 @@ const ProductDetails = () => {
           className="pt-6 sm:pt-10 pb-16 bg-background"
     >
       <div className="container mx-auto px-4 md:px-6">
-        {/* Breadcrumb */}
+
         <motion.nav
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -305,16 +305,16 @@ const ProductDetails = () => {
           </span>
         </motion.nav>
 
-        {/* Product Grid */}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-          {/* Left Column — Image Gallery */}
+
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-4"
           >
-            {/* Main Image */}
+
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-900 border border-border shadow-premium">
               <img
                 src={images[selectedImage]?.url || images[selectedImage]}
@@ -328,7 +328,7 @@ const ProductDetails = () => {
               )}
             </div>
 
-            {/* Thumbnail Strip */}
+
             <div className="flex gap-3 overflow-x-auto pb-1">
               {images.map((img, idx) => (
                 <button
@@ -350,19 +350,19 @@ const ProductDetails = () => {
             </div>
           </motion.div>
 
-          {/* Right Column — Product Details */}
+
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col"
           >
-            {/* Category Badge */}
+
             <span className="inline-flex self-start items-center text-xs font-semibold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-full mb-4">
               {product.category?.name || "Premium Item"}
             </span>
 
-            {/* Rating */}
+
             <div className="flex items-center gap-2 mb-3">
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
@@ -384,12 +384,12 @@ const ProductDetails = () => {
               </span>
             </div>
 
-            {/* Title */}
+
             <h1 className="text-3xl font-bold tracking-tight text-foreground mb-4">
               {product.title}
             </h1>
 
-            {/* Price */}
+
             <div className="flex items-baseline gap-3 mb-6">
               <span className="text-3xl font-bold text-foreground">
                 ₹{Math.round(product.price).toLocaleString("en-IN")}
@@ -406,12 +406,12 @@ const ProductDetails = () => {
               )}
             </div>
 
-            {/* Description */}
+
             <p className="text-muted-foreground leading-relaxed mb-6">
               {product.description || fallbackProduct.description}
             </p>
 
-            {/* Features */}
+
             <div className="mb-8">
               <h3 className="text-sm font-semibold text-foreground mb-3">
                 Key Features
@@ -431,7 +431,7 @@ const ProductDetails = () => {
               </ul>
             </div>
 
-            {/* Quantity Selector */}
+
             <div className="flex items-center gap-4 mb-6">
               <span className="text-sm font-semibold text-foreground">
                 Quantity
@@ -455,7 +455,7 @@ const ProductDetails = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
+
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button
                 variant={addedToCart ? "glow" : "premium"}
@@ -486,7 +486,7 @@ const ProductDetails = () => {
               </Button>
             </div>
 
-            {/* Trust Badges */}
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
               {[
                 { icon: Shield, label: "2-Year Warranty" },
@@ -505,7 +505,7 @@ const ProductDetails = () => {
               ))}
             </div>
 
-            {/* Seller Info Card */}
+
             <div className="bg-card border border-border rounded-2xl p-5 shadow-premium">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 shadow-glow-sm">
@@ -540,7 +540,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      {/* Buy Now Modal */}
+
       <AnimatePresence>
         {showBuyNowModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -550,7 +550,7 @@ const ProductDetails = () => {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-lg bg-card border border-border rounded-2xl p-6 shadow-premium overflow-y-auto max-h-[90vh]"
             >
-              {/* Close Button */}
+
               <button
                 onClick={() => setShowBuyNowModal(false)}
                 className="absolute top-4 right-4 p-2 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
@@ -572,10 +572,10 @@ const ProductDetails = () => {
                 </div>
               )}
 
-              {/* Quick Item Summary */}
+
               <div className="mb-5 p-3.5 rounded-xl bg-muted/30 border border-border/60 flex gap-3.5 items-center">
                 <img
-                  src={images[0]?.url || images[0] || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100"}
+                  src={images[0]?.url || images[0] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=80"}
                   alt={product.title}
                   className="w-12 h-12 rounded-lg object-cover bg-background border border-border/50"
                 />

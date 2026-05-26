@@ -13,7 +13,7 @@ export default function AdminCategories() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [formData, setFormData] = useState({ name: "", slug: "" });
 
-  // Fetch all categories
+
   const { data: categories, isLoading, error, refetch } = useQuery({
     queryKey: ["adminCategoriesList"],
     queryFn: async () => {
@@ -22,7 +22,7 @@ export default function AdminCategories() {
     },
   });
 
-  // Create Category Mutation
+
   const createCategoryMutation = useMutation({
     mutationFn: async (payload) => {
       const res = await api.post("/admin/categories", payload);
@@ -38,7 +38,7 @@ export default function AdminCategories() {
     },
   });
 
-  // Update Category Mutation
+
   const updateCategoryMutation = useMutation({
     mutationFn: async ({ id, payload }) => {
       const res = await api.put(`/admin/categories/${id}`, payload);
@@ -54,7 +54,7 @@ export default function AdminCategories() {
     },
   });
 
-  // Delete Category Mutation
+
   const deleteCategoryMutation = useMutation({
     mutationFn: async (id) => {
       const res = await api.delete(`/admin/categories/${id}`);
@@ -112,7 +112,7 @@ export default function AdminCategories() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
@@ -130,7 +130,7 @@ export default function AdminCategories() {
         </button>
       </div>
 
-      {/* Categories Grid Table */}
+
       <div className="bg-[#1f150c]/10 border border-[#412d15]/30 rounded-2xl overflow-hidden shadow-premium">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
@@ -203,7 +203,7 @@ export default function AdminCategories() {
         </div>
       </div>
 
-      {/* CRUD Category Modal */}
+
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

@@ -25,7 +25,7 @@ export default function AdminOrders() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch all orders across the platform
+
   const { data: orders, isLoading, error, refetch } = useQuery({
     queryKey: ["adminAllOrders"],
     queryFn: async () => {
@@ -34,7 +34,7 @@ export default function AdminOrders() {
     },
   });
 
-  // Refund mutation
+
   const refundMutation = useMutation({
     mutationFn: async (id) => {
       const res = await api.post(`/admin/orders/${id}/refund`);
@@ -63,7 +63,7 @@ export default function AdminOrders() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
           Platform Transactions
@@ -73,7 +73,7 @@ export default function AdminOrders() {
         </p>
       </div>
 
-      {/* Control row */}
+
       <div className="flex items-center gap-3 bg-secondary/35 border border-[#412d15]/30 rounded-xl p-3 max-w-md">
         <Search className="w-4 h-4 text-muted-foreground" />
         <input
@@ -85,7 +85,7 @@ export default function AdminOrders() {
         />
       </div>
 
-      {/* Transactions table */}
+
       <div className="bg-[#1f150c]/10 border border-[#412d15]/30 rounded-2xl overflow-hidden shadow-premium">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">

@@ -4,14 +4,14 @@ const ApiResponse = require("../utils/ApiResponse");
 const ApiError    = require("../utils/ApiError");
 const asyncHandler = require("../utils/asyncHandler");
 
-// ── GET /api/cart ─────────────────────────────────────────────────────────
+
 const getCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id })
     .populate("items.product", "title price images stock isActive");
   return new ApiResponse(200, "Cart fetched.", cart || { items: [], totalPrice: 0 }).send(res);
 });
 
-// ── POST /api/cart ────────────────────────────────────────────────────────
+
 const addToCart = asyncHandler(async (req, res) => {
   const { productId, quantity = 1 } = req.body;
   if (!productId) throw new ApiError(400, "Product ID is required.");
@@ -23,7 +23,7 @@ const addToCart = asyncHandler(async (req, res) => {
   let cart = await Cart.findOne({ user: req.user._id });
   if (!cart) cart = new Cart({ user: req.user._id, items: [] });
 
-  // Check if item already in cart
+
   const existingIdx = cart.items.findIndex(
     (i) => i.product.toString() === productId.toString()
   );
@@ -41,7 +41,7 @@ const addToCart = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Item added to cart.", cart).send(res);
 });
 
-// ── PUT /api/cart/:itemId ─────────────────────────────────────────────────
+
 const updateCartItem = asyncHandler(async (req, res) => {
   const { quantity } = req.body;
   if (!quantity || quantity < 1) throw new ApiError(400, "Quantity must be at least 1.");
@@ -63,7 +63,7 @@ const updateCartItem = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Cart updated.", cart).send(res);
 });
 
-// ── DELETE /api/cart/:itemId ──────────────────────────────────────────────
+
 const removeFromCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id });
   if (!cart) throw new ApiError(404, "Cart not found.");
@@ -74,7 +74,7 @@ const removeFromCart = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Item removed from cart.", cart).send(res);
 });
 
-// ── DELETE /api/cart ──────────────────────────────────────────────────────
+
 const clearCart = asyncHandler(async (req, res) => {
   await Cart.findOneAndUpdate(
     { user: req.user._id },

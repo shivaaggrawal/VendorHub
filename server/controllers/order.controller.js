@@ -9,14 +9,14 @@ const validate = (req) => {
   if (!errors.isEmpty()) throw new ApiError(422, "Validation failed", errors.array());
 };
 
-// ── POST /api/orders ──────────────────────────────────────────────────────
+
 const placeOrder = asyncHandler(async (req, res) => {
   validate(req);
   const order = await orderService.placeOrder(req.user._id, req.body);
   return new ApiResponse(201, "Order placed successfully.", order).send(res);
 });
 
-// ── GET /api/orders (buyer's own orders) ──────────────────────────────────
+
 const getMyOrders = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const result = await orderService.getBuyerOrders(req.user._id, {
@@ -26,7 +26,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Orders fetched.", result.orders, result.meta).send(res);
 });
 
-// ── GET /api/orders/:id ───────────────────────────────────────────────────
+
 const getOrderById = asyncHandler(async (req, res) => {
   const Order = require("../models/Order.model");
   const order = await Order.findById(req.params.id)
@@ -34,7 +34,7 @@ const getOrderById = asyncHandler(async (req, res) => {
     .populate("items.product", "title images");
   if (!order) throw new ApiError(404, "Order not found.");
 
-  // Buyers can only see their own orders
+
   if (
     req.user.role === "buyer" &&
     order.buyerId._id.toString() !== req.user._id.toString()
@@ -42,7 +42,7 @@ const getOrderById = asyncHandler(async (req, res) => {
     throw new ApiError(403, "Access denied.");
   }
 
-  // Sellers can only see orders containing at least one of their items
+
   if (req.user.role === "seller") {
     const hasSellerItem = order.items.some(
       (item) => item.sellerId.toString() === req.user._id.toString()
@@ -55,7 +55,7 @@ const getOrderById = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Order fetched.", order).send(res);
 });
 
-// ── PATCH /api/orders/:id/status ─────────────────────────────────────────
+
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const { status, note } = req.body;
   if (!status) throw new ApiError(400, "Status is required.");
@@ -70,7 +70,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   return new ApiResponse(200, `Order status updated to "${status}".`, order).send(res);
 });
 
-// ── DELETE /api/orders/:id/cancel ─────────────────────────────────────────
+
 const cancelOrder = asyncHandler(async (req, res) => {
   const { note } = req.body;
   const order = await orderService.cancelOrder(req.params.id, req.user.role, note, req.user._id);

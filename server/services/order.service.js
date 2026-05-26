@@ -3,21 +3,21 @@ const Product = require("../models/Product.model");
 const ApiError = require("../utils/ApiError");
 const { ORDER_STATUS, PAYMENT_STATUS } = require("../constants/orderStatus");
 
-/** Reads commission rate from DB (persisted by admin) or falls back to env var */
+
 const getCommissionRate = async () => {
   try {
     const Setting = require("../models/Setting.model");
     const s = await Setting.findOne({ key: "commissionRate" }).lean();
     if (s?.value?.rate !== undefined) return parseFloat(s.value.rate) / 100;
-  } catch (_) { /* fall through */ }
+  } catch (_)
   return parseFloat(process.env.PLATFORM_COMMISSION_RATE || "10") / 100;
 };
 
-/**
- * Places a new order after validating stock and computing totals.
- * @param {string} buyerId
- * @param {{ items: Array, shippingAddress: object }} data
- */
+
+
+
+
+
 const placeOrder = async (buyerId, { items, shippingAddress }) => {
   let totalAmount = 0;
   const enrichedItems = [];
@@ -31,7 +31,7 @@ const placeOrder = async (buyerId, { items, shippingAddress }) => {
       throw new ApiError(400, `Insufficient stock for "${product.title}". Available: ${product.stock}`);
     }
 
-    // Snapshot price at order time
+
     const lineTotal = product.price * item.quantity;
     totalAmount += lineTotal;
 
@@ -44,7 +44,7 @@ const placeOrder = async (buyerId, { items, shippingAddress }) => {
       sellerId: product.sellerId._id,
     });
 
-    // Deduct stock
+
     product.stock -= item.quantity;
     await product.save();
   }
@@ -66,14 +66,14 @@ const placeOrder = async (buyerId, { items, shippingAddress }) => {
   return order;
 };
 
-/**
- * Updates order status (with validation of allowed transitions).
- */
+
+
+
 const updateOrderStatus = async (orderId, newStatus, changedBy, note = "", sellerId = null) => {
   const order = await Order.findById(orderId);
   if (!order) throw new ApiError(404, "Order not found.");
 
-  // If changed by seller, verify BOLA: seller must own at least one item in the order
+
   if (changedBy === "seller" && sellerId) {
     const hasSellerItem = order.items.some(
       (item) => item.sellerId.toString() === sellerId.toString()
@@ -98,7 +98,7 @@ const updateOrderStatus = async (orderId, newStatus, changedBy, note = "", selle
   order.orderStatus = newStatus;
   order.statusHistory.push({ status: newStatus, changedAt: new Date(), note });
 
-  // If delivered, mark payment confirmed
+
   if (newStatus === ORDER_STATUS.DELIVERED) {
     order.paymentStatus = PAYMENT_STATUS.PAID;
   }
@@ -107,9 +107,9 @@ const updateOrderStatus = async (orderId, newStatus, changedBy, note = "", selle
   return order;
 };
 
-/**
- * Returns orders for a buyer (paginated).
- */
+
+
+
 const getBuyerOrders = async (buyerId, { page = 1, limit = 10 } = {}) => {
   const skip  = (page - 1) * limit;
   const total = await Order.countDocuments({ buyerId });
@@ -123,9 +123,9 @@ const getBuyerOrders = async (buyerId, { page = 1, limit = 10 } = {}) => {
   return { orders, meta: { total, page, limit, pages: Math.ceil(total / limit) } };
 };
 
-/**
- * Returns orders where at least one item belongs to a seller.
- */
+
+
+
 const getSellerOrders = async (sellerId, { page = 1, limit = 10, status } = {}) => {
   const filter = { "items.sellerId": sellerId };
   if (status) filter.orderStatus = status;
@@ -142,9 +142,9 @@ const getSellerOrders = async (sellerId, { page = 1, limit = 10, status } = {}) 
   return { orders, meta: { total, page, limit, pages: Math.ceil(total / limit) } };
 };
 
-/**
- * Cancel an order (buyer or admin).
- */
+
+
+
 const cancelOrder = async (orderId, cancelledBy, note = "", userId = null) => {
   const order = await Order.findById(orderId);
   if (!order) throw new ApiError(404, "Order not found.");
@@ -166,7 +166,7 @@ const cancelOrder = async (orderId, cancelledBy, note = "", userId = null) => {
     throw new ApiError(400, "This order cannot be cancelled.");
   }
 
-  // Restore stock
+
   for (const item of order.items) {
     await Product.findByIdAndUpdate(item.product, {
       $inc: { stock: item.quantity },

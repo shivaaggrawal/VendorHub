@@ -34,7 +34,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-// Fallback data if DB collections are currently fresh
+
 const DEFAULT_WEEKLY_SALES = [
   { _id: "Mon", dailyEarnings: 120 * 83, orders: 2 },
   { _id: "Tue", dailyEarnings: 450 * 83, orders: 4 },
@@ -54,7 +54,7 @@ const DEFAULT_TOP_PRODUCTS = [
 ];
 
 export default function SellerAnalytics() {
-  // Fetch Weekly Sales
+
   const { data: weeklySales } = useQuery({
     queryKey: ["sellerWeeklySales"],
     queryFn: async () => {
@@ -63,7 +63,7 @@ export default function SellerAnalytics() {
     },
   });
 
-  // Fetch Top Products
+
   const { data: topProducts } = useQuery({
     queryKey: ["sellerTopProducts"],
     queryFn: async () => {
@@ -93,7 +93,7 @@ export default function SellerAnalytics() {
       animate="visible"
       className="space-y-8"
     >
-      {/* Title */}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
@@ -108,7 +108,7 @@ export default function SellerAnalytics() {
         </div>
       </div>
 
-      {/* Analytics Summary Panels */}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div
           variants={itemVariants}
@@ -152,9 +152,9 @@ export default function SellerAnalytics() {
         </motion.div>
       </div>
 
-      {/* Recharts Panels */}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Weekly Revenue Area Chart */}
+
         <motion.div
           variants={itemVariants}
           className="bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium relative overflow-hidden"
@@ -205,7 +205,7 @@ export default function SellerAnalytics() {
           </div>
         </motion.div>
 
-        {/* Top Selling Products Bar Chart */}
+
         <motion.div
           variants={itemVariants}
           className="bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium relative overflow-hidden"

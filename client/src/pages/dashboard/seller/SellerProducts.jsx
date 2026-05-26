@@ -31,13 +31,13 @@ export default function SellerProducts() {
     price: "",
     stock: "",
     category: "",
-    imageUrls: "", // fallback URLs separated by commas
-    tags: "", // tags separated by commas
+    imageUrls: "",
+    tags: "",
   });
   const [notification, setNotification] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null);
 
-  // Fetch Seller's Products
+
   const { data: productsData, isLoading, error, refetch } = useQuery({
     queryKey: ["sellerProducts"],
     queryFn: async () => {
@@ -46,7 +46,7 @@ export default function SellerProducts() {
     },
   });
 
-  // Fetch Categories for Form Selection
+
   const { data: categories } = useQuery({
     queryKey: ["formCategories"],
     queryFn: async () => {
@@ -55,7 +55,7 @@ export default function SellerProducts() {
     },
   });
 
-  // Create Product Mutation
+
   const createProductMutation = useMutation({
     mutationFn: async (payload) => {
       const res = await api.post("/products", payload);
@@ -71,7 +71,7 @@ export default function SellerProducts() {
     },
   });
 
-  // Update Product Mutation
+
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, payload }) => {
       const res = await api.put(`/products/${id}`, payload);
@@ -87,7 +87,7 @@ export default function SellerProducts() {
     },
   });
 
-  // Delete Product Mutation
+
   const deleteProductMutation = useMutation({
     mutationFn: async (id) => {
       const res = await api.delete(`/products/${id}`);
@@ -151,7 +151,7 @@ export default function SellerProducts() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Map fields
+
     const parsedImages = formData.imageUrls
       .split(",")
       .map((url) => url.trim())
@@ -172,7 +172,7 @@ export default function SellerProducts() {
       tags: parsedTags,
     };
 
-    // If images are manually listed, pass them
+
     if (parsedImages.length > 0) {
       payload.images = parsedImages;
     } else {
@@ -193,7 +193,7 @@ export default function SellerProducts() {
     setProductToDelete(id);
   };
 
-  // Filter Products locally
+
   const filteredProducts = productsData?.filter((p) =>
     p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -201,7 +201,7 @@ export default function SellerProducts() {
 
   return (
     <div className="space-y-6">
-      {/* Header Panel */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
@@ -219,7 +219,7 @@ export default function SellerProducts() {
         </button>
       </div>
 
-      {/* Control Row */}
+
       <div className="flex items-center gap-3 bg-secondary/35 border border-[#412d15]/30 rounded-xl p-3 max-w-md">
         <Search className="w-4 h-4 text-muted-foreground" />
         <input
@@ -231,7 +231,7 @@ export default function SellerProducts() {
         />
       </div>
 
-      {/* Table & rounded rows layout */}
+
       <div className="bg-[#1f150c]/10 border border-[#412d15]/30 rounded-2xl overflow-hidden shadow-premium">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -275,7 +275,7 @@ export default function SellerProducts() {
               ) : (
                 filteredProducts.map((product) => {
                   const isLowStock = product.stock <= 5;
-                  const firstImage = product.images?.[0]?.url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&q=80";
+                  const firstImage = product.images?.[0]?.url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=80";
 
                   return (
                     <tr
@@ -346,7 +346,7 @@ export default function SellerProducts() {
         </div>
       </div>
 
-      {/* CRUD Edit / Add Modal */}
+
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -364,7 +364,7 @@ export default function SellerProducts() {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-[#1f150c] border border-[#412d15] rounded-3xl w-full max-w-xl p-6 relative overflow-hidden shadow-2xl z-10 max-h-[90vh] overflow-y-auto"
             >
-              {/* Gold background elements */}
+
               <div className="absolute -top-32 -right-32 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#412d15]">
@@ -382,7 +382,7 @@ export default function SellerProducts() {
                 </button>
               </div>
 
-              {/* Form */}
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
@@ -472,7 +472,7 @@ export default function SellerProducts() {
                     name="imageUrls"
                     value={formData.imageUrls}
                     onChange={handleInputChange}
-                    placeholder="https://image1.jpg, https://image2.jpg"
+                    placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
                     className="w-full bg-black/40 border border-[#412d15] rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder-muted-foreground/60 outline-none focus:border-[#e1dcc9]/50 transition-colors"
                   />
                   <span className="text-[9px] text-muted-foreground/60 block mt-0.5">
@@ -494,7 +494,7 @@ export default function SellerProducts() {
                   />
                 </div>
 
-                {/* Submit Row */}
+
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#412d15] mt-6">
                   <button
                     type="button"
@@ -522,7 +522,7 @@ export default function SellerProducts() {
         )}
       </AnimatePresence>
 
-      {/* Custom Premium Deletion Confirmation Modal */}
+
       <AnimatePresence>
         {productToDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -540,7 +540,7 @@ export default function SellerProducts() {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-[#1f150c] border border-red-500/20 rounded-3xl w-full max-w-md p-6 relative overflow-hidden shadow-2xl z-10 text-center"
             >
-              {/* Danger glow aura */}
+
               <div className="absolute -top-32 -left-32 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
 
               <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/25 flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(239,68,68,0.1)]">

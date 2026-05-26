@@ -1,20 +1,20 @@
 const mongoose = require("mongoose");
 const { ORDER_STATUS, PAYMENT_STATUS } = require("../constants/orderStatus");
 
-// ─── Order item sub-schema ────────────────────────────────────────────────
+
 const orderItemSchema = new mongoose.Schema(
   {
     product:      { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
-    title:        { type: String, required: true },       // snapshot at order time
-    price:        { type: Number, required: true },        // snapshot at order time
+    title:        { type: String, required: true },
+    price:        { type: Number, required: true },
     quantity:     { type: Number, required: true, min: 1 },
-    image:        { type: String, default: "" },          // primary image url
+    image:        { type: String, default: "" },
     sellerId:     { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { _id: true }
 );
 
-// ─── Shipping address sub-schema ──────────────────────────────────────────
+
 const shippingAddressSchema = new mongoose.Schema(
   {
     name:    { type: String, required: true },
@@ -28,7 +28,7 @@ const shippingAddressSchema = new mongoose.Schema(
   { _id: false }
 );
 
-// ─── Main order schema ────────────────────────────────────────────────────
+
 const orderSchema = new mongoose.Schema(
   {
     buyerId: {
@@ -46,9 +46,9 @@ const orderSchema = new mongoose.Schema(
     shippingAddress: { type: shippingAddressSchema, required: true },
 
     totalAmount: { type: Number, required: true, min: 0 },
-    // Platform commission deducted from totalAmount
+
     commissionAmount: { type: Number, default: 0 },
-    // Net payable to seller after commission
+
     sellerEarnings: { type: Number, default: 0 },
 
     orderStatus: {
@@ -62,12 +62,12 @@ const orderSchema = new mongoose.Schema(
       default: PAYMENT_STATUS.PENDING,
     },
 
-    // Razorpay references
+
     razorpayOrderId:   { type: String, default: "" },
     razorpayPaymentId: { type: String, default: "" },
     razorpaySignature: { type: String, default: "" },
 
-    // Status timeline
+
     statusHistory: [
       {
         status:    { type: String },
@@ -76,11 +76,11 @@ const orderSchema = new mongoose.Schema(
       },
     ],
 
-    // Cancellation
+
     cancelledBy:     { type: String, enum: ["buyer", "seller", "admin", ""], default: "" },
     cancellationNote:{ type: String, default: "" },
 
-    // Refund tracking
+
     refundStatus: {
       type: String,
       enum: ["none", "requested", "processed"],
@@ -91,7 +91,7 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ─── Indexes ──────────────────────────────────────────────────────────────
+
 orderSchema.index({ buyerId: 1, createdAt: -1 });
 orderSchema.index({ "items.sellerId": 1, createdAt: -1 });
 orderSchema.index({ orderStatus: 1 });

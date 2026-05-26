@@ -44,20 +44,20 @@ const OrderTracking = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  
+
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectorOpen, setSelectorOpen] = useState(false);
 
-  // 1. Auth Guard Redirect
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate(`/login?redirect=/orders/${id || "latest"}/tracking`);
     }
   }, [isAuthenticated, navigate, id]);
 
-  // 2. Fetch User Orders
+
   useEffect(() => {
     if (!isAuthenticated) return;
 
@@ -86,16 +86,15 @@ const OrderTracking = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-6 pt-6 sm:pt-10 pb-16 bg-background min-h-screen">
-        <Loader 
-          fullScreen={false} 
-          text="Initializing secure shipment transit mapping..." 
-          subtitle="LOGISTICS TELEMETRY SYNC" 
+        <Loader
+          fullScreen={false}
+          text="Initializing secure shipment transit mapping..."
+          subtitle="LOGISTICS TELEMETRY SYNC"
         />
       </div>
     );
   }
 
-  // Cinematic Empty State
   if (orders.length === 0) {
     return (
       <div className="pt-6 sm:pt-10 pb-16 bg-background min-h-screen flex items-center justify-center">
@@ -130,7 +129,6 @@ const OrderTracking = () => {
     );
   }
 
-  // Calculate Active Step
   const getStepIndex = (status) => {
     switch (status) {
       case "Placed": return 0;
@@ -152,7 +150,7 @@ const OrderTracking = () => {
       className="pt-6 sm:pt-10 pb-16 bg-background min-h-screen"
     >
       <div className="container mx-auto px-4 md:px-6 max-w-3xl">
-        {/* Order Selector (Multiple Orders) */}
+
         {orders.length > 1 && (
           <div className="relative mb-6">
             <button
@@ -213,7 +211,7 @@ const OrderTracking = () => {
           </div>
         )}
 
-        {/* Header */}
+
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -236,7 +234,7 @@ const OrderTracking = () => {
           </div>
         </motion.div>
 
-        {/* Main tracking box */}
+
         {isCancelled ? (
           <motion.div
             initial={{ opacity: 0 }}
@@ -262,11 +260,11 @@ const OrderTracking = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="bg-[#1f150c] border border-[#412d15]/60 rounded-[28px] p-6 md:p-8 shadow-premium mb-8 relative overflow-hidden"
           >
-            {/* Progress Bar */}
+
             <div className="relative mb-10 pt-2">
-              {/* Background track */}
+
               <div className="absolute top-7 left-5 right-5 h-1 bg-[#412d15]/50 rounded-full" />
-              {/* Animated fill */}
+
               <motion.div
                 initial={{ width: "0%" }}
                 animate={{
@@ -277,7 +275,7 @@ const OrderTracking = () => {
                 style={{ maxWidth: "calc(100% - 40px)" }}
               />
 
-              {/* Step Markers */}
+
               <div className="relative flex justify-between">
                 {steps.map((step, idx) => {
                   const Icon = step.icon;
@@ -322,7 +320,7 @@ const OrderTracking = () => {
               </div>
             </div>
 
-            {/* Current Status Message */}
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -338,9 +336,9 @@ const OrderTracking = () => {
                   {currentStep === 3 && "Secure capsule safely locked into terminal destination."}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Active carrier: <span className="font-semibold text-foreground">VendorHub Premium Logistics</span>. 
-                  {currentStep === 3 
-                    ? " Delivery finalized successfully." 
+                  Active carrier: <span className="font-semibold text-foreground">VendorHub Premium Logistics</span>.
+                  {currentStep === 3
+                    ? " Delivery finalized successfully."
                     : " Processing under priority transit status protocol."}
                 </p>
               </div>
@@ -348,7 +346,7 @@ const OrderTracking = () => {
           </motion.div>
         )}
 
-        {/* Shipment Details */}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -390,7 +388,7 @@ const OrderTracking = () => {
             ))}
           </div>
 
-          {/* Logistics Address */}
+
           <div className="border-t border-[#412d15]/50 mt-6 pt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5">Destination Capsule</p>
@@ -417,7 +415,7 @@ const OrderTracking = () => {
             </div>
           </div>
 
-          {/* Action */}
+
           <div className="mt-8 flex gap-3.5">
             <Link to="/explore" className="flex-1">
               <Button variant="outline" className="w-full rounded-xl py-5">

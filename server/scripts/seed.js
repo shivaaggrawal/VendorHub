@@ -7,7 +7,7 @@ const Product = require("../models/Product.model");
 
 const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/ai-vendor-marketplace";
 
-// Unsplash premium image assets for dynamic generation
+
 const ELECTRONICS_IMAGES = [
   "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&q=80",
   "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80",
@@ -62,7 +62,7 @@ const FURNITURE_IMAGES = [
   "https://images.unsplash.com/photo-1585412727339-54e4bae3bbf9?w=800&q=80"
 ];
 
-// Title resources for programmatic expansion (30 unique names per category)
+
 const ELECTRONICS_TITLES = [
   "XenoBook Duo Dual-Screen Laptop",
   "Titan-X Liquid Cooled GPU Node",
@@ -267,19 +267,19 @@ const seedData = async () => {
     await mongoose.connect(MONGO_URI);
     console.log("Connected to MongoDB.");
 
-    // Clear existing data
+
     console.log("Clearing existing data...");
     await User.deleteMany({});
     await Category.deleteMany({});
     await Product.deleteMany({});
     console.log("Cleaned database.");
 
-    // Create Passwords (let Mongoose pre-save hook hash them once upon User.create)
+
     const adminPassword = "admin123";
     const sellerPassword = "seller123";
     const buyerPassword = "buyer123";
 
-    // 1. Create Admin
+
     console.log("Creating Admin...");
     const admin = await User.create({
       name: "System Administrator",
@@ -289,7 +289,7 @@ const seedData = async () => {
       isActive: true,
     });
 
-    // 2. Create Sellers (Premium Storefronts)
+
     console.log("Creating Premium Vendors...");
     const sellers = await User.create([
       {
@@ -349,7 +349,7 @@ const seedData = async () => {
       }
     ]);
 
-    // 3. Create Buyers for Realistic Reviews
+
     console.log("Creating Verified Buyer Accounts...");
     const buyers = await User.create([
       { name: "Alex Carter", email: "alex@buyer.com", password: buyerPassword, role: "buyer", isActive: true },
@@ -359,7 +359,7 @@ const seedData = async () => {
       { name: "Kai Tanaka", email: "kai@buyer.com", password: buyerPassword, role: "buyer", isActive: true }
     ]);
 
-    // 4. Create Categories
+
     console.log("Creating Core Categories...");
     const categoriesData = [
       {
@@ -407,7 +407,7 @@ const seedData = async () => {
       categories[cat.name] = created._id;
     }
 
-    // Helpers to reference IDs
+
     const acoustix = sellers[0]._id;
     const omnitech = sellers[1]._id;
     const neothread = sellers[2]._id;
@@ -417,7 +417,7 @@ const seedData = async () => {
     console.log("Seeding Premium Custom-Curated Products...");
 
     const productsData = [
-      // ────────── ELECTRONICS: SMARTPHONES ──────────
+
       {
         title: "Vortex Pro 17 Augmented Smartphone",
         description: "Experience the zenith of mobile computing. Powered by a 3nm neural processing unit, the Vortex Pro 17 features an ultra-bright holographic OLED panel, 100x macro optical drop lens, and integrated Web3 security protocols. Engineered with a matte obsidian titanium frame.",
@@ -481,7 +481,7 @@ const seedData = async () => {
         ]
       },
 
-      // ────────── ELECTRONICS: LAPTOPS ──────────
+
       {
         title: "Zephyrus X9 Carbon Gaming Laptop",
         description: "Command absolute computing dominion. Housing a liquid-metal cooled 24-core processor, an RTX 5090 graphics node, and a true 240Hz dual-mode OLED screen. Enclosed within a zero-flex aerospace carbon composite unibody.",
@@ -543,7 +543,7 @@ const seedData = async () => {
         ]
       },
 
-      // ────────── ELECTRONICS: ACCESSORIES ──────────
+
       {
         title: "CyberGrid Mechanical Keyboard",
         description: "An ultra-premium, CNC-machined aluminum mechanical keyboard. Hot-swappable tactile switches factory lubed, sound dampening foam, translucent keycaps with interactive custom lighting, and a customizable media control ring.",
@@ -584,7 +584,7 @@ const seedData = async () => {
         ]
       },
 
-      // ────────── WEARABLES ──────────
+
       {
         title: "Aura Smart Bio-Ring Gen 3",
         description: "The ultimate wellness tracker hidden in plain sight. Sculpted from premium zirconia ceramic with micro-sensors that measure heart rate variability, blood oxygen, sleep phases, and stress scores 24/7. Completely waterproof up to 100m.",
@@ -645,7 +645,7 @@ const seedData = async () => {
         ]
       },
 
-      // ────────── AUDIO ──────────
+
       {
         title: "Neural Noise-Cancelling Headphones ANC-1",
         description: "Block the digital noise and immerse in master-quality sound. Featuring dual-core processors mapping ambient sounds 1000 times a second to generate a zone of absolute silent bliss. Engineered with memory foam wrapped in high-quality vegan leather.",
@@ -707,7 +707,7 @@ const seedData = async () => {
         ]
       },
 
-      // ────────── FASHION: HOODIES ──────────
+
       {
         title: "Obscura Technical Structural Hoodie",
         description: "Redefine your structural fashion footprint. Built from a heavy 520gsm loopback cotton blend with structural paneling, windproof outer treatment, water-impermeable zipper storage nodes, and an deep wrap hood. Matte black premium streetwear aesthetic.",
@@ -770,7 +770,7 @@ const seedData = async () => {
         ]
       },
 
-      // ────────── FASHION: SNEAKERS ──────────
+
       {
         title: "Volt Runner Carbon Sneakers",
         description: "Engineered to push human kinetics. Integrates a lightweight custom carbon-fiber launch plate under a nitrogen-infused responsive foam bed. The outer skin is formed from continuous breathable TPU filament.",
@@ -832,7 +832,7 @@ const seedData = async () => {
         ]
       },
 
-      // ────────── ACCESSORIES: BAGS ──────────
+
       {
         title: "Apex Waterproof Roll-Top Pack",
         description: "The ultimate technical backpack. Fully radio-frequency welded seams that create a completely water-impermeable capsule. Features a suspended laptop harness sleeve, tactical compression webbing, and a hidden quick-access tech drawer.",
@@ -894,9 +894,9 @@ const seedData = async () => {
       }
     ];
 
-    // ─── Programmatic Generation ───
+
     console.log("Generating 60 high-fidelity products in every core category (360 total additional products)...");
-    
+
     const generateCategoryProducts = (catName, catId, sellerId, vendorLocation, titles, subcategories, imageList, baseDesc, basePrice, subTags) => {
       const generated = [];
       for (let i = 0; i < 60; i++) {
@@ -906,14 +906,14 @@ const seedData = async () => {
         const price = Math.round(rawPrice * 83);
         const originalPrice = i % 2 === 0 ? Math.round((rawPrice + 50) * 83) : 0;
         const stock = 10 + (i * 2) % 45;
-        
-        // Pick an image
+
+
         const imgUrl = imageList[i % imageList.length];
         const images = [
           { public_id: `gen_${catName.toLowerCase().slice(0, 3)}_${i}`, url: imgUrl }
         ];
 
-        // Custom realistic premium descriptions
+
         const features = [
           "Outfitted with cutting-edge micro-sensors and a high-durability carbon-composite framework.",
           "Designed for absolute performance and long-lasting durability in professional environments.",
@@ -922,17 +922,17 @@ const seedData = async () => {
           "Hand-assembled and individually certified to meet strict quality and environmental standards.",
           "Utilizes bio-compatible aerospace titanium alloy for structural resilience and lightweight utility."
         ];
-        
+
         const description = `${title} represents the pinnacle of ${subcategory.toLowerCase()} innovation. ${baseDesc} ${features[i % features.length]} Offers unparalleled user experiences and exceptional engineering.`;
 
-        // Standard tags and synonyms
+
         const tags = [subcategory.toLowerCase(), catName.toLowerCase(), ...subTags, "premium", "new"];
         const synonyms = [subcategory.toLowerCase(), catName.toLowerCase(), ...subTags];
         const trendingTags = i % 5 === 0 ? ["trending"] : i % 7 === 0 ? ["cyberdrop"] : ["featured"];
 
-        // Reviews
+
         const productReviews = [];
-        const reviewsCount = 1 + (i % 3); // 1 to 3 reviews
+        const reviewsCount = 1 + (i % 3);
         for (let r = 0; r < reviewsCount; r++) {
           const buyer = buyers[r % buyers.length];
           const comments = [
@@ -944,7 +944,7 @@ const seedData = async () => {
           ];
           productReviews.push({
             user: buyer._id,
-            rating: 4 + (r % 2), // 4 or 5 stars
+            rating: 4 + (r % 2),
             comment: comments[(i + r) % comments.length]
           });
         }
@@ -969,7 +969,7 @@ const seedData = async () => {
       return generated;
     };
 
-    // Generate for all 6 categories
+
     const genElectronics = generateCategoryProducts(
       "Electronics", categories["Electronics"], omnitech, "Andheri, Mumbai",
       ELECTRONICS_TITLES, ["Smartphones", "Laptops", "Gaming Accessories", "AI Gadgets"], ELECTRONICS_IMAGES,
@@ -1012,7 +1012,7 @@ const seedData = async () => {
       ["furniture", "home", "desk", "office"]
     );
 
-    // Transform manual productsData to INR and Mumbai locations dynamically
+
     const locationMap = {
       "California, USA": "Colaba, Mumbai",
       "Tokyo, Japan": "Andheri, Mumbai",
@@ -1022,16 +1022,16 @@ const seedData = async () => {
     };
 
     productsData.forEach(p => {
-      // 1. Convert Price to INR
+
       p.price = Math.round(p.price * 83);
       if (p.discountedPrice) {
         p.discountedPrice = Math.round(p.discountedPrice * 83);
       }
-      // 2. Map Location to Mumbai
+
       if (p.vendorLocation && locationMap[p.vendorLocation]) {
         p.vendorLocation = locationMap[p.vendorLocation];
       }
-      // 3. Localize specific review references
+
       if (p.reviews && p.reviews.length > 0) {
         p.reviews.forEach(r => {
           if (r.comment && r.comment.includes("Tokyo streets")) {
@@ -1041,7 +1041,7 @@ const seedData = async () => {
       }
     });
 
-    // Combine manual and programmatically generated items
+
     const allProductsToSeed = [
       ...productsData,
       ...genElectronics,
@@ -1052,7 +1052,7 @@ const seedData = async () => {
       ...genFurniture
     ];
 
-    // Compute average ratings and numReviews for all seeded items to be 100% correct
+
     allProductsToSeed.forEach(p => {
       if (p.reviews && p.reviews.length > 0) {
         const total = p.reviews.reduce((sum, r) => sum + r.rating, 0);
@@ -1066,7 +1066,7 @@ const seedData = async () => {
 
     console.log(`Writing ${allProductsToSeed.length} total products to database...`);
     await Product.create(allProductsToSeed);
-    
+
     console.log("Successfully seeded database with premium storefronts, users, categories, and high-fidelity products!");
     process.exit(0);
   } catch (err) {

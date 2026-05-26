@@ -34,41 +34,41 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
-      select: false, // Never return password by default
+      select: false,
     },
     role: {
       type: String,
       enum: Object.values(ROLES),
       default: ROLES.BUYER,
     },
-    // Seller-specific: admin must approve before seller can list products
+
     isVendorApproved: {
       type: Boolean,
       default: false,
     },
-    // Avatar / profile photo
+
     avatar: {
       public_id: { type: String, default: "" },
       url:       { type: String, default: "" },
     },
-    // Saved delivery addresses
+
     addresses: [addressSchema],
-    // Wishlist: array of product ObjectIds
+
     wishlist: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
     ],
-    // Tracks recently viewed product IDs for AI recommendations
+
     browsingHistory: [
       {
         product:   { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
         viewedAt:  { type: Date, default: Date.now },
       },
     ],
-    // Password reset
+
     passwordResetToken:   { type: String, select: false },
     passwordResetExpires: { type: Date,   select: false },
 
-    // Seller storefront info
+
     storeName:        { type: String, default: "" },
     storeDescription: { type: String, default: "" },
     vendorLocation:   { type: String, default: "" },
@@ -78,27 +78,27 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ─── Pre-save hook: hash password before saving ───────────────────────────
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// ─── Instance method: compare password ────────────────────────────────────
+
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// ─── Instance method: add to browsing history (keep last 30 unique) ───────
+
 userSchema.methods.addToBrowsingHistory = async function (productId) {
-  // Remove if already present
+
   this.browsingHistory = this.browsingHistory.filter(
     (h) => h.product.toString() !== productId.toString()
   );
-  // Prepend latest
+
   this.browsingHistory.unshift({ product: productId, viewedAt: new Date() });
-  // Keep max 30
+
   if (this.browsingHistory.length > 30) this.browsingHistory = this.browsingHistory.slice(0, 30);
   return this.save({ validateBeforeSave: false });
 };

@@ -4,7 +4,7 @@ const { getCart, addToCart, updateCartItem, removeFromCart, clearCart } =
   require("../controllers/cart.controller");
 const { verifyToken, checkRole } = require("../middleware/auth.middleware");
 
-// All cart routes require an authenticated buyer
+
 router.use(verifyToken, checkRole(["buyer"]));
 
 router.get("/",              getCart);

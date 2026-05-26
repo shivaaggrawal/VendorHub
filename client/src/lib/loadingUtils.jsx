@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 import Loader from "../components/Loader";
 
-/**
- * Hook to delay loading state to prevent flickering/flashing.
- * If the operation finishes within `delay` ms, the loader is never shown.
- * If the loader is shown, it stays visible for at least `minimumShowTime` ms.
- */
+
+
+
+
+
 export function useDelayedLoader(loading, { delay = 300, minimumShowTime = 500 } = {}) {
   const [showLoader, setShowLoader] = useState(false);
   const delayTimerRef = useRef(null);
@@ -16,13 +16,13 @@ export function useDelayedLoader(loading, { delay = 300, minimumShowTime = 500 }
 
   useEffect(() => {
     if (loading) {
-      // Clear min show timer if we are still/back in loading state
+
       if (minShowTimerRef.current) {
         clearTimeout(minShowTimerRef.current);
         minShowTimerRef.current = null;
       }
 
-      // Schedule showing the loader if not already showing
+
       if (!showLoader && !delayTimerRef.current) {
         delayTimerRef.current = setTimeout(() => {
           setShowLoader(true);
@@ -31,13 +31,13 @@ export function useDelayedLoader(loading, { delay = 300, minimumShowTime = 500 }
         }, delay);
       }
     } else {
-      // Clear scheduling timer
+
       if (delayTimerRef.current) {
         clearTimeout(delayTimerRef.current);
         delayTimerRef.current = null;
       }
 
-      // Check if loader is currently visible
+
       if (showLoader) {
         const elapsed = Date.now() - showTimeRef.current;
         const remaining = minimumShowTime - elapsed;
@@ -64,10 +64,10 @@ export function useDelayedLoader(loading, { delay = 300, minimumShowTime = 500 }
   return showLoader;
 }
 
-/**
- * Custom async loading manager hook. 
- * Supports automatic try/catch/finally state tracking, error capture, and component unmount abort controller cleanup.
- */
+
+
+
+
 export function useLoading(asyncFunction, { defaultError = "An error occurred." } = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -75,7 +75,7 @@ export function useLoading(asyncFunction, { defaultError = "An error occurred." 
   const abortControllerRef = useRef(null);
 
   const execute = useCallback(async (...args) => {
-    // Abort previous run of the same operation if still running
+
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -87,13 +87,13 @@ export function useLoading(asyncFunction, { defaultError = "An error occurred." 
     setError(null);
 
     try {
-      // Inject abort signal into original async function parameters
+
       const result = await asyncFunction(...args, { signal: controller.signal });
       setData(result);
       return result;
     } catch (err) {
       if (err.name === "AbortError" || err.message === "canceled" || controller.signal.aborted) {
-        // Ignored unmount or manual cancellations
+
         return;
       }
       const msg = err.response?.data?.message || err.message || defaultError;
@@ -117,10 +117,10 @@ export function useLoading(asyncFunction, { defaultError = "An error occurred." 
   return { loading, error, data, execute, setError, setData };
 }
 
-/**
- * Premium layout loader wrapper.
- * Prevents layout shift and blank content areas by softly blurring existing layout content and overlaying a delayed loader inside.
- */
+
+
+
+
 export function LoaderWrapper({
   loading,
   children,
@@ -167,17 +167,13 @@ export function LoaderWrapper({
   return <>{children}</>;
 }
 
-/**
- * Delayed fallback wrapper designed specifically for lazy route transitions.
- * Eliminates quick flashing of route chunk compiling screens.
- */
 export function DelayedSuspenseFallback({ text = "Opening boutique gateway...", subtitle = "VENDORHUB SYSTEM CORE", fullScreen = true }) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShow(true);
-    }, 300); // 300ms anti-flash threshold
+    }, 300);
 
     return () => clearTimeout(timer);
   }, []);
@@ -187,10 +183,6 @@ export function DelayedSuspenseFallback({ text = "Opening boutique gateway...", 
   return <Loader fullScreen={fullScreen} text={text} subtitle={subtitle} />;
 }
 
-/**
- * Premium ambient top-bar loading indicator.
- * Displays a glowing champagne status line at the top of the viewport when React Query is running requests in the background.
- */
 export function GlobalTopBarLoader() {
   const isFetching = useIsFetching();
   const isMutating = useIsMutating();
@@ -212,10 +204,6 @@ export function GlobalTopBarLoader() {
   );
 }
 
-/**
- * Smart premium image component.
- * Uses luxurious custom shimmers to block layout shifts and slowly fades image opacity in on complete download.
- */
 export function SmartImage({
   src,
   alt,

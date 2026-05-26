@@ -2,23 +2,23 @@ import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { DelayedSuspenseFallback } from "../../lib/loadingUtils";
-import { 
-  ShieldAlert, 
-  Clock, 
-  Store, 
-  CheckCircle2, 
-  ArrowRight, 
-  Mail, 
-  MapPin, 
-  Calendar, 
-  Lock, 
-  Loader2, 
+import {
+  ShieldAlert,
+  Clock,
+  Store,
+  CheckCircle2,
+  ArrowRight,
+  Mail,
+  MapPin,
+  Calendar,
+  Lock,
+  Loader2,
   HelpCircle,
   Activity,
   FileCheck
 } from "lucide-react";
 
-// Lazy-loaded subcomponents for code separation & performance
+
 const SellerOverview = lazy(() => import("./seller/SellerOverview"));
 const SellerProducts = lazy(() => import("./seller/SellerProducts"));
 const SellerOrders   = lazy(() => import("./seller/SellerOrders"));
@@ -34,14 +34,14 @@ const pageTransition = {
 export default function SellerDashboard({ view = "overview" }) {
   const { user } = useSelector((state) => state.auth);
 
-  // Intercept unapproved seller and display a premium onboarding dashboard
+
   if (user?.role === "seller" && !user?.isVendorApproved) {
-    const registryHash = user?._id 
-      ? `VH-${user._id.substring(0, 8).toUpperCase()}-${(user.createdAt || "2026-05-21").substring(0, 10)}` 
+    const registryHash = user?._id
+      ? `VH-${user._id.substring(0, 8).toUpperCase()}-${(user.createdAt || "2026-05-21").substring(0, 10)}`
       : "VH-CORE-UNSECURED";
 
-    const formattedDate = user?.createdAt 
-      ? new Date(user.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) 
+    const formattedDate = user?.createdAt
+      ? new Date(user.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
       : "Under Review";
 
     return (
@@ -52,7 +52,7 @@ export default function SellerDashboard({ view = "overview" }) {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="space-y-10"
         >
-          {/* Header Dashboard Shield Banner */}
+
           <div className="relative overflow-hidden rounded-[2rem] border border-[#e1dcc9]/10 bg-gradient-to-r from-[#1f150c]/40 via-[#0c0804]/50 to-[#000000]/60 p-8 sm:p-10 shadow-[0_24px_60px_rgba(0,0,0,0.8)] backdrop-blur-xl">
             <div className="absolute top-0 right-0 w-80 h-80 bg-[#412d15]/10 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-[#e1dcc9]/2 rounded-full blur-[90px] pointer-events-none" />
@@ -83,13 +83,13 @@ export default function SellerDashboard({ view = "overview" }) {
             </div>
           </div>
 
-          {/* Interactive Multi-Stage Timeline */}
+
           <div className="space-y-6">
             <h2 className="text-xs uppercase tracking-[0.3em] font-black text-[#e1dcc9]/70 font-oswald">
               Onboarding Milestones
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-              {/* Step 1 */}
+
               <div className="relative rounded-2xl border border-emerald-500/20 bg-gradient-to-b from-[#111810]/40 to-[#070b06]/65 p-6 shadow-md backdrop-blur-md">
                 <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_12px_rgba(16,185,129,0.15)]">
                   <CheckCircle2 className="w-4 h-4" />
@@ -103,7 +103,7 @@ export default function SellerDashboard({ view = "overview" }) {
                 </div>
               </div>
 
-              {/* Step 2 */}
+
               <div className="relative rounded-2xl border border-[#e1dcc9]/20 bg-gradient-to-b from-[#1f150c]/30 to-[#0f0b07]/50 p-6 shadow-md backdrop-blur-md ring-1 ring-[#e1dcc9]/5">
                 <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full bg-[#412d15]/40 text-[#e1dcc9] border border-[#e1dcc9]/15 animate-pulse shadow-[0_0_15px_rgba(225,220,201,0.15)]">
                   <Clock className="w-4 h-4" />
@@ -117,7 +117,7 @@ export default function SellerDashboard({ view = "overview" }) {
                 </div>
               </div>
 
-              {/* Step 3 */}
+
               <div className="relative rounded-2xl border border-[#412d15]/50 bg-black/45 p-6 shadow-sm opacity-60">
                 <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full bg-black/55 text-[#e1dcc9]/25 border border-[#412d15]/40">
                   <Lock className="w-4 h-4" />
@@ -134,15 +134,15 @@ export default function SellerDashboard({ view = "overview" }) {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Simulated Luxury Storefront Holographic Card */}
+
             <div className="lg:col-span-5 space-y-6">
               <h2 className="text-xs uppercase tracking-[0.3em] font-black text-[#e1dcc9]/70 font-oswald">
                 Boutique Credentials
               </h2>
               <div className="relative overflow-hidden rounded-[2rem] border border-[#e1dcc9]/10 bg-gradient-to-br from-[#1b120a]/60 via-black to-[#130d07]/50 p-7 shadow-2xl backdrop-blur-2xl group">
-                {/* Visual holograph laser shine */}
-                <div 
-                  className="absolute -inset-y-12 -left-36 w-24 bg-gradient-to-r from-transparent via-[#e1dcc9]/3 to-transparent -skew-x-12 group-hover:translate-x-[40rem] transition-transform ease-out pointer-events-none" 
+
+                <div
+                  className="absolute -inset-y-12 -left-36 w-24 bg-gradient-to-r from-transparent via-[#e1dcc9]/3 to-transparent -skew-x-12 group-hover:translate-x-[40rem] transition-transform ease-out pointer-events-none"
                   style={{ transitionDuration: "2200ms" }}
                 />
 
@@ -159,7 +159,7 @@ export default function SellerDashboard({ view = "overview" }) {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Location Info */}
+
                   <div className="flex items-center gap-3">
                     <MapPin className="w-4 h-4 text-[#e1dcc9]/45 shrink-0" />
                     <div>
@@ -170,7 +170,7 @@ export default function SellerDashboard({ view = "overview" }) {
                     </div>
                   </div>
 
-                  {/* Contact Email */}
+
                   <div className="flex items-center gap-3">
                     <Mail className="w-4 h-4 text-[#e1dcc9]/45 shrink-0" />
                     <div>
@@ -181,7 +181,7 @@ export default function SellerDashboard({ view = "overview" }) {
                     </div>
                   </div>
 
-                  {/* Creation Date */}
+
                   <div className="flex items-center gap-3">
                     <Calendar className="w-4 h-4 text-[#e1dcc9]/45 shrink-0" />
                     <div>
@@ -205,7 +205,7 @@ export default function SellerDashboard({ view = "overview" }) {
               </div>
             </div>
 
-            {/* Compliance security FAQ Accordion grid */}
+
             <div className="lg:col-span-7 space-y-6">
               <h2 className="text-xs uppercase tracking-[0.3em] font-black text-[#e1dcc9]/70 font-oswald">
                 Security Onboarding FAQ

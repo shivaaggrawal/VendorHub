@@ -31,9 +31,6 @@ const LinkedinIcon = (props) => (
   </svg>
 );
 
-/* ────────────────────────────────────────────── */
-/*  Footer link data                              */
-/* ────────────────────────────────────────────── */
 const marketplaceLinks = [
   { label: "Explore Products", to: "/explore" },
   { label: "Categories", to: "/categories" },
@@ -59,15 +56,15 @@ const companyLinks = [
 ];
 
 const socialLinks = [
-  { label: "Twitter", icon: TwitterIcon, href: "https://twitter.com" },
+  { label: "Twitter", icon: TwitterIcon, href: "https://x.com" },
   { label: "Instagram", icon: InstagramIcon, href: "https://instagram.com" },
   { label: "LinkedIn", icon: LinkedinIcon, href: "https://linkedin.com" },
   { label: "GitHub", icon: GithubIcon, href: "https://github.com" },
 ];
 
-/* ────────────────────────────────────────────── */
-/*  Footer Link Column                            */
-/* ────────────────────────────────────────────── */
+
+
+
 const FooterColumn = ({ title, links }) => (
   <div className="flex flex-col gap-6">
     <div className="relative">
@@ -93,13 +90,10 @@ const FooterColumn = ({ title, links }) => (
   </div>
 );
 
-/* ────────────────────────────────────────────── */
-/*  Footer                                        */
-/* ────────────────────────────────────────────── */
 const Footer = () => {
   return (
     <footer className="relative border-t border-[#412d15]/30 bg-black overflow-hidden select-none">
-      {/* ── Premium Hairline Laser Glow Border ── */}
+
       <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#e1dcc9]/20 to-transparent" />
       <motion.div
         initial={{ x: "-100%" }}
@@ -108,14 +102,14 @@ const Footer = () => {
         className="absolute top-0 left-0 w-72 h-[1.5px] bg-gradient-to-r from-transparent via-[#e1dcc9]/60 to-transparent blur-[0.5px]"
       />
 
-      {/* ── Decorative Background Vector Meshes & Elements ── */}
+
       <div className="absolute inset-0 bg-gradient-mesh opacity-65 pointer-events-none" />
-      
-      {/* Soft floating luxury bronze blobs */}
+
+
       <div className="absolute -top-24 -left-20 w-96 h-96 bg-[#412d15]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute -bottom-48 -right-20 w-[450px] h-[450px] bg-[#e1dcc9]/2 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Decorative technical lines to match premium tech blueprints */}
+
       <svg className="absolute right-0 bottom-0 w-96 h-96 text-[#e1dcc9]/2 pointer-events-none" viewBox="0 0 100 100">
         <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="0.25" strokeDasharray="2 3" />
         <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" strokeWidth="0.15" />
@@ -125,21 +119,21 @@ const Footer = () => {
       </svg>
 
       <div className="container mx-auto px-4 md:px-8 py-20 relative z-10">
-        {/* ── Grid ────────────────────────────── */}
+
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
-          {/* Brand & Curation Column */}
+
           <div className="md:col-span-4 flex flex-col gap-6">
             <Link to="/" className="inline-flex items-center gap-2 group">
               <span className="text-xl font-black tracking-[0.2em] text-[#e1dcc9] font-oswald uppercase">
                 VENDOR<span className="font-light text-[#e1dcc9]/70 tracking-[0.1em]">HUB</span>
               </span>
             </Link>
-            
+
             <p className="text-xs text-[#e1dcc9]/50 leading-relaxed max-w-xs font-light">
               An artificial luxury node connecting prestigious designers, global curators, and discerning buyers across a highly secure, cinematic multi-vendor web experience.
             </p>
 
-            {/* Newsletter section */}
+
             <div className="flex flex-col gap-3 mt-2">
               <div className="relative">
                 <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-[#e1dcc9]/80 font-oswald">
@@ -150,7 +144,7 @@ const Footer = () => {
               <p className="text-[11px] text-[#e1dcc9]/40 mt-1">
                 Receive private curations and AI-powered collection alerts.
               </p>
-              
+
               <form
                 onSubmit={(e) => e.preventDefault()}
                 className="flex items-center gap-2 mt-2"
@@ -175,10 +169,10 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Spacer */}
+
           <div className="hidden lg:block lg:col-span-1" />
 
-          {/* Link Columns */}
+
           <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
             <FooterColumn title="Marketplace" links={marketplaceLinks} />
             <FooterColumn title="For Sellers" links={sellerLinks} />
@@ -186,15 +180,15 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* ── Divider ─────────────────────────── */}
+
         <div className="mt-20 pt-10 border-t border-[#412d15]/20 relative">
-          {/* Subtle logo watermark inside divider */}
+
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-black text-[#e1dcc9]/10 font-black text-[9px] tracking-[0.4em] uppercase font-oswald select-none">
             INTELLIGENCE LAYER ACTIVE
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Copyright & Core Status */}
+
             <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
               <p className="text-[11px] text-[#e1dcc9]/35 font-light tracking-wide">
                 &copy; {new Date().getFullYear()} VendorHub. Crafted for the global elite.
@@ -206,7 +200,7 @@ const Footer = () => {
               </span>
             </div>
 
-            {/* Social Circle Badges */}
+
             <div className="flex items-center gap-3">
               {socialLinks.map(({ label, icon: Icon, href }) => (
                 <motion.a
@@ -225,7 +219,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Premium Bottom Bar */}
+
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-[10px] text-[#e1dcc9]/30 tracking-widest font-light uppercase">
             <Link to="/about" className="hover:text-[#e1dcc9] transition-colors duration-300">TERMS OF CURATION</Link>
             <span>•</span>

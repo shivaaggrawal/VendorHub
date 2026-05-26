@@ -55,7 +55,7 @@ const CartPage = () => {
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  
+
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [checkoutError, setCheckoutError] = useState(null);
@@ -158,7 +158,7 @@ const CartPage = () => {
       });
       const paymentData = paymentResponse.data?.data || {};
 
-      // If dummy/developer key, directly verify payment after simulated secure processing
+
       if (paymentData.keyId?.startsWith("rzp_test_dummy")) {
         setTimeout(async () => {
           try {
@@ -238,7 +238,7 @@ const CartPage = () => {
     }
   };
 
-  // Payment success state
+
   if (paymentSuccess) {
     return (
       <div className="pt-6 sm:pt-10 pb-16 bg-background">
@@ -303,13 +303,12 @@ const CartPage = () => {
     );
   }
 
-  // Empty cart state
   if (cartItems.length === 0) {
     return (
       <div className="pt-6 sm:pt-10 pb-16 bg-[#000000] min-h-screen text-[#e1dcc9]">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-center py-8">
-            {/* Left 1 Column: Glassmorphic Empty Indicator */}
+
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -334,7 +333,7 @@ const CartPage = () => {
               </Link>
             </motion.div>
 
-            {/* Right 2 Columns: Highly Coveted Drops showcase! */}
+
             <div className="lg:col-span-2 space-y-6">
               <div>
                 <p className="text-[10px] font-bold text-[#e1dcc9]/50 tracking-[0.2em] uppercase mb-2">Highly Coveted Drops</p>
@@ -375,7 +374,7 @@ const CartPage = () => {
       className="pt-6 sm:pt-10 pb-16 bg-background"
     >
       <div className="container mx-auto px-4 md:px-6">
-        {/* Header */}
+
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -391,7 +390,7 @@ const CartPage = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
+
           <div className="lg:col-span-2 space-y-4">
             <AnimatePresence mode="popLayout">
               {cartItems.map((item, idx) => (
@@ -404,7 +403,7 @@ const CartPage = () => {
                   className="bg-card border border-border rounded-2xl p-4 md:p-5 shadow-premium hover:shadow-premium-hover transition-all duration-300"
                 >
                   <div className="flex gap-4">
-                    {/* Thumbnail */}
+
                     <Link
                       to={`/product/${item._id}`}
                       className="flex-shrink-0"
@@ -415,7 +414,7 @@ const CartPage = () => {
                             item.images?.[0]?.url ||
                             item.images?.[0] ||
                             item.image ||
-                            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300"
+                            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=80"
                           }
                           alt={item.title || item.name}
                           className="w-full h-full object-cover"
@@ -423,7 +422,7 @@ const CartPage = () => {
                       </div>
                     </Link>
 
-                    {/* Details */}
+
                     <div className="flex-1 min-w-0 flex flex-col">
                       <div className="flex justify-between items-start gap-2">
                         <div className="min-w-0">
@@ -450,7 +449,7 @@ const CartPage = () => {
                       </div>
 
                       <div className="mt-auto pt-3 flex items-center justify-between">
-                        {/* Quantity Controls */}
+
                         <div className="flex items-center border border-border rounded-xl overflow-hidden">
                           <button
                             onClick={() =>
@@ -483,7 +482,7 @@ const CartPage = () => {
                           </button>
                         </div>
 
-                        {/* Subtotal */}
+
                         <span className="text-base font-bold text-foreground">
                           ₹{Math.round(item.price * item.quantity).toLocaleString("en-IN")}
                         </span>
@@ -495,7 +494,7 @@ const CartPage = () => {
             </AnimatePresence>
           </div>
 
-          {/* Order Summary Sidebar */}
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -547,7 +546,7 @@ const CartPage = () => {
                 Pay Securely
               </Button>
 
-              {/* SSL Badge */}
+
               <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted-foreground">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
                 <span>SSL Encrypted &bull; Secure Checkout</span>
@@ -557,7 +556,7 @@ const CartPage = () => {
         </div>
       </div>
 
-      {/* Checkout Modal */}
+
       <AnimatePresence>
         {showCheckout && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -567,7 +566,7 @@ const CartPage = () => {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-lg bg-card border border-border rounded-2xl p-6 shadow-premium overflow-y-auto max-h-[90vh]"
             >
-              {/* Close Button */}
+
               <button
                 onClick={() => setShowCheckout(false)}
                 className="absolute top-4 right-4 p-2 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-all"

@@ -10,7 +10,7 @@ const RootLayout = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
-      {/* Spacer for fixed navbar height */}
+
       <div className="h-16 lg:h-[108px]" />
 
       <motion.main

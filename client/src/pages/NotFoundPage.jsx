@@ -20,12 +20,12 @@ const NotFoundPage = () => {
             <Search className="w-8 h-8 text-primary" />
           </div>
         </div>
-        
+
         <h2 className="text-3xl font-bold tracking-tight mb-4">Page not found</h2>
         <p className="text-muted-foreground max-w-md mb-8">
           We couldn't find the page you're looking for. It might have been moved, deleted, or never existed in the first place.
         </p>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <Link to="/">
             <Button variant="premium" className="gap-2 h-12 px-8 rounded-full">

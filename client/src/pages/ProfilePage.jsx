@@ -48,7 +48,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
 };
 
-// Premium Mumbai Local Locations matching seed
+
 const MUMBAI_LOCATIONS = [
   "Colaba, Mumbai",
   "Andheri, Mumbai",
@@ -63,27 +63,27 @@ export default function ProfilePage() {
   const { toast } = useToast();
   const { user, status } = useSelector((state) => state.auth);
 
-  // Active Profile Navigation Tab
-  const [activeTab, setActiveTab] = useState("identity"); // "identity", "addresses", "oversight"/"storefront"/"upgrade"
 
-  // Profile Edit State
+  const [activeTab, setActiveTab] = useState("identity");
+
+
   const [profileName, setProfileName] = useState(user?.name || "");
   const [profileEmail, setProfileEmail] = useState(user?.email || "");
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
-  // Seller Storefront Edit State
+
   const [storeName, setStoreName] = useState(user?.storeName || "");
   const [storeDescription, setStoreDescription] = useState(user?.storeDescription || "");
   const [vendorLocation, setVendorLocation] = useState(user?.vendorLocation || MUMBAI_LOCATIONS[0]);
   const [isEditingStore, setIsEditingStore] = useState(false);
   const [isSavingStore, setIsSavingStore] = useState(false);
 
-  // Address Editing State
-  const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
-  const [editingAddressId, setEditingAddressId] = useState(null); // null means adding a new address
 
-  // Individual Address Fields
+  const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState(null);
+
+
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [stateName, setStateName] = useState("");
@@ -92,18 +92,18 @@ export default function ProfilePage() {
   const [isDefault, setIsDefault] = useState(false);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
 
-  // Admin Oversight State
+
   const [sellersList, setSellersList] = useState([]);
   const [isFetchingSellers, setIsFetchingSellers] = useState(false);
   const [sellersSearchQuery, setSellersSearchQuery] = useState("");
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [isUpdatingSellerStatus, setIsUpdatingSellerStatus] = useState(false);
 
-  // Buyer Upgrade Simulation State
+
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [upgradeApplied, setUpgradeApplied] = useState(false);
 
-  // Fetch Sellers List for Admins
+
   const fetchSellers = async () => {
     if (user?.role !== "admin") return;
     setIsFetchingSellers(true);
@@ -125,7 +125,7 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  // Sync state with user profile changes
+
   useEffect(() => {
     if (user) {
       setProfileName(user.name || "");
@@ -136,7 +136,7 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  // Calculate user initials for Avatar
+
   const getInitials = (name) => {
     if (!name) return "VH";
     const parts = name.trim().split(" ");
@@ -146,7 +146,7 @@ export default function ProfilePage() {
     return parts[0].slice(0, 2).toUpperCase();
   };
 
-  // Profile Update Form Handler
+
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     if (!profileName.trim() || !profileEmail.trim()) {
@@ -169,7 +169,7 @@ export default function ProfilePage() {
     }
   };
 
-  // Storefront settings form handler
+
   const handleStoreSubmit = async (e) => {
     e.preventDefault();
     if (!storeName.trim() || !vendorLocation.trim()) {
@@ -198,7 +198,7 @@ export default function ProfilePage() {
     }
   };
 
-  // Helper to sync addresses state with DB via Thunk
+
   const saveAddressesToDB = async (updatedAddresses) => {
     try {
       const result = await dispatch(updateProfile({ addresses: updatedAddresses }));
@@ -214,7 +214,7 @@ export default function ProfilePage() {
     }
   };
 
-  // Open Add Address Form
+
   const openAddAddress = () => {
     setEditingAddressId(null);
     setStreet("");
@@ -222,11 +222,11 @@ export default function ProfilePage() {
     setStateName("");
     setPincode("");
     setCountry("India");
-    setIsDefault(user?.addresses?.length === 0); // first address defaults to true
+    setIsDefault(user?.addresses?.length === 0);
     setIsAddressFormOpen(true);
   };
 
-  // Open Edit Address Form
+
   const openEditAddress = (addr) => {
     setEditingAddressId(addr._id);
     setStreet(addr.street);
@@ -238,13 +238,13 @@ export default function ProfilePage() {
     setIsAddressFormOpen(true);
   };
 
-  // Close Address Form
+
   const closeAddressForm = () => {
     setIsAddressFormOpen(false);
     setEditingAddressId(null);
   };
 
-  // Submit Address Form (Add / Edit)
+
   const handleAddressSubmit = async (e) => {
     e.preventDefault();
     if (!street.trim() || !city.trim() || !stateName.trim() || !pincode.trim()) {
@@ -255,7 +255,7 @@ export default function ProfilePage() {
     setIsSavingAddress(true);
     let currentAddresses = user?.addresses ? [...user.addresses] : [];
 
-    // If this address is set to default, unset isDefault on all other addresses
+
     if (isDefault) {
       currentAddresses = currentAddresses.map((a) => ({ ...a, isDefault: false }));
     }
@@ -270,16 +270,16 @@ export default function ProfilePage() {
     };
 
     if (editingAddressId) {
-      // Edit mode
+
       currentAddresses = currentAddresses.map((addr) =>
         addr._id === editingAddressId ? { ...addr, ...addressPayload } : addr
       );
     } else {
-      // Add mode
+
       currentAddresses.push(addressPayload);
     }
 
-    // Save changes
+
     const success = await saveAddressesToDB(currentAddresses);
     setIsSavingAddress(false);
 
@@ -293,7 +293,7 @@ export default function ProfilePage() {
     }
   };
 
-  // Delete Address Handler
+
   const handleDeleteAddress = async (addrId) => {
     const confirmDelete = window.confirm("Are you sure you want to remove this delivery terminal address?");
     if (!confirmDelete) return;
@@ -302,7 +302,7 @@ export default function ProfilePage() {
     const targetAddress = currentAddresses.find((a) => a._id === addrId);
     let updatedAddresses = currentAddresses.filter((addr) => addr._id !== addrId);
 
-    // If deleted address was default and we still have other addresses, assign a new default
+
     if (targetAddress?.isDefault && updatedAddresses.length > 0) {
       updatedAddresses[0] = { ...updatedAddresses[0], isDefault: true };
     }
@@ -314,7 +314,7 @@ export default function ProfilePage() {
     }
   };
 
-  // Set Address as Default
+
   const handleSetDefaultAddress = async (addrId) => {
     let currentAddresses = user?.addresses ? [...user.addresses] : [];
     currentAddresses = currentAddresses.map((a) => ({
@@ -329,19 +329,19 @@ export default function ProfilePage() {
     }
   };
 
-  // Admin Action: Toggle Active Status of a Merchant
+
   const handleToggleSellerActive = async (sellerId) => {
     setIsUpdatingSellerStatus(true);
     try {
       const response = await api.patch(`/admin/users/${sellerId}/toggle-active`);
       const updatedStatus = response.data?.data?.isActive;
-      
-      // Update local state list
+
+
       setSellersList((prev) =>
         prev.map((s) => (s._id === sellerId ? { ...s, isActive: updatedStatus } : s))
       );
 
-      // If currently viewed seller is updated, update detail state
+
       if (selectedSeller?._id === sellerId) {
         setSelectedSeller((prev) => ({ ...prev, isActive: updatedStatus }));
       }
@@ -355,18 +355,18 @@ export default function ProfilePage() {
     }
   };
 
-  // Admin Action: Approve a Merchant Storefront
+
   const handleApproveSeller = async (sellerId) => {
     setIsUpdatingSellerStatus(true);
     try {
       await api.patch(`/admin/vendors/${sellerId}/approve`);
-      
-      // Update local state list
+
+
       setSellersList((prev) =>
         prev.map((s) => (s._id === sellerId ? { ...s, isVendorApproved: true } : s))
       );
 
-      // If currently viewed seller is updated, update detail state
+
       if (selectedSeller?._id === sellerId) {
         setSelectedSeller((prev) => ({ ...prev, isVendorApproved: true }));
       }
@@ -380,18 +380,18 @@ export default function ProfilePage() {
     }
   };
 
-  // Admin Action: Suspend / Disapprove a Merchant Storefront
+
   const handleSuspendSeller = async (sellerId) => {
     setIsUpdatingSellerStatus(true);
     try {
       await api.patch(`/admin/vendors/${sellerId}/reject`);
-      
-      // Update local state list
+
+
       setSellersList((prev) =>
         prev.map((s) => (s._id === sellerId ? { ...s, isVendorApproved: false, isActive: false } : s))
       );
 
-      // If currently viewed seller is updated, update detail state
+
       if (selectedSeller?._id === sellerId) {
         setSelectedSeller((prev) => ({ ...prev, isVendorApproved: false, isActive: false }));
       }
@@ -405,7 +405,7 @@ export default function ProfilePage() {
     }
   };
 
-  // Simulation: Initialize Merchant Upgrade request for Buyers
+
   const handleInitializeUpgrade = () => {
     setIsUpgrading(true);
     setTimeout(() => {
@@ -415,7 +415,7 @@ export default function ProfilePage() {
     }, 1500);
   };
 
-  // Filter sellers list by search query
+
   const filteredSellers = sellersList.filter((s) => {
     const q = sellersSearchQuery.toLowerCase().trim();
     if (!q) return true;
@@ -427,7 +427,7 @@ export default function ProfilePage() {
     );
   });
 
-  // Format "Member since" date
+
   const memberSinceDate = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString("en-IN", {
         year: "numeric",
@@ -443,7 +443,7 @@ export default function ProfilePage() {
         animate="visible"
         className="space-y-8"
       >
-        {/* Page Title Header */}
+
         <div className="border-b border-[#412d15]/50 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <span className="inline-flex rounded-full border border-[#e1dcc9]/12 bg-[#e1dcc9]/5 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-[#e1dcc9]/85 mb-2.5 font-semibold">
@@ -467,30 +467,30 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Dashboard Main Grid split */}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* LEFT COLUMN: Identity Panel, Telemetry sync & Dynamic Tab Navigation (lg:col-span-4) */}
+
+
           <div className="lg:col-span-4 space-y-6">
-            
-            {/* Holographic Member Identity Card */}
+
+
             <div className="relative overflow-hidden rounded-[2.2rem] border border-[#e1dcc9]/12 bg-gradient-to-br from-[#1b120a]/80 via-black/85 to-[#0c0804]/90 p-7 shadow-2xl backdrop-blur-3xl group">
-              {/* Internal glowing lights */}
+
               <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#e1dcc9]/3 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#412d15]/20 rounded-full blur-3xl pointer-events-none" />
-              
-              {/* Rotating golden double-ring around avatar */}
+
+
               <div className="flex flex-col items-center text-center relative z-10 py-2">
                 <div className="relative group/avatar cursor-pointer">
-                  {/* Rotating outer ring */}
+
                   <div
                     className="absolute -inset-2.5 rounded-full border border-dashed border-[#e1dcc9]/25 pointer-events-none"
                     style={{ animation: "spin 25s linear infinite" }}
                   />
-                  {/* Pulsing glow inner ring */}
+
                   <div className="absolute -inset-1.5 rounded-full border border-[#e1dcc9]/10 animate-pulse pointer-events-none" />
-                  
-                  {/* Real avatar shape container */}
+
+
                   <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-[#412d15] to-[#1f150c] border border-[#e1dcc9]/40 flex items-center justify-center shadow-[0_0_40px_rgba(65,45,21,0.45)] group-hover/avatar:border-[#e1dcc9] transition-all duration-300">
                     <span className="text-3xl font-black tracking-widest text-[#e1dcc9] select-none font-anton">
                       {getInitials(user?.name)}
@@ -502,7 +502,7 @@ export default function ProfilePage() {
                   {user?.name || "Premium Explorer"}
                 </h2>
 
-                {/* Cyberpunk Role core badge */}
+
                 <span className="mt-2 inline-flex items-center px-3.5 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase bg-[#e1dcc9]/10 border border-[#e1dcc9]/30 text-[#e1dcc9] shadow-glow-sm">
                   {user?.role || "BUYER"} CORE
                 </span>
@@ -522,7 +522,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Diagnostic Telemetry Sync Box */}
+
             <div className="rounded-[1.8rem] border border-[#412d15] bg-black/45 p-5 space-y-3 shadow-md relative overflow-hidden font-mono text-[10px]">
               <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/5 rounded-full blur-xl pointer-events-none" />
               <div className="flex items-center gap-2 text-white/50 border-b border-[#412d15]/40 pb-2 mb-2 uppercase tracking-widest">
@@ -547,12 +547,12 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Premium Tab Navigation List */}
+
             <div className="rounded-[1.8rem] border border-[#412d15] bg-[#1f150c]/25 p-3.5 space-y-2 shadow-inner">
               <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#e1dcc9]/40 mb-2 px-2.5">
                 Portal Options
               </p>
-              
+
               <button
                 onClick={() => setActiveTab("identity")}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider text-left border transition-all duration-300 ${
@@ -621,11 +621,11 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Display Active Tab Contents (lg:col-span-8) */}
+
           <div className="lg:col-span-8">
             <AnimatePresence mode="wait">
-              
-              {/* TAB 1: IDENTITY SETTINGS EDIT FORM */}
+
+
               {activeTab === "identity" && (
                 <motion.div
                   key="tab-identity"
@@ -755,7 +755,7 @@ export default function ProfilePage() {
                 </motion.div>
               )}
 
-              {/* TAB 2: DELIVERY ADDRESS LIST AND CREATE FORMS */}
+
               {activeTab === "addresses" && (
                 <motion.div
                   key="tab-addresses"
@@ -791,7 +791,7 @@ export default function ProfilePage() {
                     )}
                   </div>
 
-                  {/* Add / Edit address expand section */}
+
                   <AnimatePresence>
                     {isAddressFormOpen && (
                       <motion.div
@@ -940,7 +940,7 @@ export default function ProfilePage() {
                     )}
                   </AnimatePresence>
 
-                  {/* Saved addresses grid list */}
+
                   <div className="space-y-4 relative z-10">
                     {!user?.addresses || user.addresses.length === 0 ? (
                       <div className="text-center py-12 border border-dashed border-[#412d15]/50 rounded-2xl bg-black/25">
@@ -1012,7 +1012,7 @@ export default function ProfilePage() {
                 </motion.div>
               )}
 
-              {/* TAB 3 (BUYER SPECIAL): COMPLIANCE UPGRADE BOARD */}
+
               {user?.role === "buyer" && activeTab === "upgrade" && (
                 <motion.div
                   key="tab-upgrade"
@@ -1045,7 +1045,7 @@ export default function ProfilePage() {
                       <p className="text-xs text-white/60 font-sans font-light max-w-md mx-auto leading-relaxed mt-1">
                         Instantiate your secure boutique catalog, zero listing fees, direct local Mumbai logistics coordination, and weekly Recharts analytics splits.
                       </p>
-                      
+
                       {upgradeApplied ? (
                         <div className="mt-6 flex items-center gap-2 text-emerald-400 bg-emerald-500/5 border border-emerald-500/20 px-4 py-2.5 rounded-full text-xs font-semibold">
                           <Check className="w-4 h-4 shrink-0" />
@@ -1102,7 +1102,7 @@ export default function ProfilePage() {
                 </motion.div>
               )}
 
-              {/* TAB 3 (SELLER SPECIAL): STOREFRONT CONFIGURATION FORM */}
+
               {user?.role === "seller" && activeTab === "storefront" && (
                 <motion.div
                   key="tab-storefront"
@@ -1263,7 +1263,7 @@ export default function ProfilePage() {
                 </motion.div>
               )}
 
-              {/* TAB 3 (ADMIN SPECIAL): MERCHANT DIRECTORY OVERSIGHT CONSOLE */}
+
               {user?.role === "admin" && activeTab === "oversight" && (
                 <motion.div
                   key="tab-oversight"
@@ -1297,7 +1297,7 @@ export default function ProfilePage() {
                     </Button>
                   </div>
 
-                  {/* Filter and search bar */}
+
                   <div className="relative mb-5 z-10">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                     <input
@@ -1309,7 +1309,7 @@ export default function ProfilePage() {
                     />
                   </div>
 
-                  {/* Merchants List */}
+
                   <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1 scrollbar-thin relative z-10">
                     {isFetchingSellers && sellersList.length === 0 ? (
                       <div className="flex justify-center items-center py-10">
@@ -1372,7 +1372,7 @@ export default function ProfilePage() {
         </div>
       </motion.div>
 
-      {/* Platform Oversight Detail Modal Overlay (For Admins) */}
+
       <AnimatePresence>
         {selectedSeller && (
           <div className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
@@ -1405,7 +1405,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-5 text-xs text-white/80 font-sans">
-                {/* Avatar summary node */}
+
                 <div className="flex items-center gap-4 bg-black/45 border border-[#412d15]/40 rounded-2xl p-4">
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#412d15] to-[#1f150c] border border-[#e1dcc9]/30 flex items-center justify-center font-anton text-lg tracking-widest text-[#e1dcc9]">
                     {getInitials(selectedSeller.name)}
@@ -1421,7 +1421,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Location */}
+
                 <div className="space-y-1.5">
                   <span className="text-[9px] font-bold uppercase tracking-widest text-[#e1dcc9]/40 font-mono">
                     Boutique Terminal Location
@@ -1432,7 +1432,7 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                {/* Store Description */}
+
                 {selectedSeller.storeDescription && (
                   <div className="space-y-1.5">
                     <span className="text-[9px] font-bold uppercase tracking-widest text-[#e1dcc9]/40 font-mono">
@@ -1444,7 +1444,7 @@ export default function ProfilePage() {
                   </div>
                 )}
 
-                {/* Platform metrics status */}
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-black/45 border border-[#412d15]/30 rounded-xl p-3.5 text-center">
                     <span className="block text-[8px] font-bold uppercase tracking-widest text-[#e1dcc9]/40 mb-1">
@@ -1476,14 +1476,14 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Action buttons controls */}
+
                 <div className="border-t border-[#412d15]/50 pt-5 mt-2 flex flex-col gap-3">
                   <p className="text-[9px] font-bold uppercase tracking-widest text-[#e1dcc9]/45 px-1 font-mono">
                     Governance Credentials Controls
                   </p>
 
                   <div className="flex gap-3">
-                    {/* Toggle storefront approval */}
+
                     {selectedSeller.isVendorApproved ? (
                       <Button
                         onClick={() => handleSuspendSeller(selectedSeller._id)}
@@ -1506,7 +1506,7 @@ export default function ProfilePage() {
                       </Button>
                     )}
 
-                    {/* Toggle Account active status */}
+
                     <Button
                       onClick={() => handleToggleSellerActive(selectedSeller._id)}
                       variant="outline"

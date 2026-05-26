@@ -2,29 +2,29 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from "lucide-react";
 
-// Create context for Toast notifications
+
 const ToastContext = createContext(null);
 
-/**
- * Premium Luxury Toast Notification System
- * Implements smooth sliding animations, gold-and-obsidian themes,
- * and standard event listeners to intercept global HTTP error alerts.
- */
+
+
+
+
+
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
-  // Add toast notification
+
   const addToast = useCallback((message, type = "info", duration = 4000) => {
     const id = Date.now() + Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type, duration }]);
   }, []);
 
-  // Remove toast by id
+
   const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Expose simplified toast commands
+
   const toast = {
     success: (msg, dur) => addToast(msg, "success", dur),
     error: (msg, dur) => addToast(msg, "error", dur),
@@ -32,7 +32,7 @@ export function ToastProvider({ children }) {
     info: (msg, dur) => addToast(msg, "info", dur),
   };
 
-  // Centralized Custom Event Handlers for Global Listening (Axios, etc.)
+
   useEffect(() => {
     const handleApiError = (event) => {
       const message = event.detail?.message || "An unexpected system error occurred.";
@@ -58,8 +58,8 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={{ toast, addToast, removeToast }}>
       {children}
-      
-      {/* Toast Notification Container in Portal Portal */}
+
+
       <div className="fixed top-6 right-6 z-[9999] flex flex-col gap-3.5 max-w-sm w-full pointer-events-none p-4 sm:p-0">
         <AnimatePresence mode="popLayout">
           {toasts.map((t) => (
@@ -71,13 +71,9 @@ export function ToastProvider({ children }) {
   );
 }
 
-/**
- * Individual Toast Card component.
- */
 function ToastItem({ toast, onClose }) {
   const { id, message, type, duration } = toast;
 
-  // Auto-expire timer
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose(id);
@@ -85,12 +81,12 @@ function ToastItem({ toast, onClose }) {
     return () => clearTimeout(timer);
   }, [id, duration, onClose]);
 
-  // Accent Styles and Icons based on notification type
+
   let accentColor, bgColor, borderColor, Icon;
   switch (type) {
     case "success":
       Icon = CheckCircle;
-      accentColor = "text-[#d4af37]"; // Classic gold accent
+      accentColor = "text-[#d4af37]";
       bgColor = "bg-[#0f0a06]/95";
       borderColor = "border-[#d4af37]/30 shadow-[0_4px_24px_rgba(212,175,55,0.08)]";
       break;
@@ -122,14 +118,14 @@ function ToastItem({ toast, onClose }) {
       transition={{ type: "spring", stiffness: 350, damping: 28 }}
       className={`pointer-events-auto flex items-start gap-3 w-full p-4 sm:p-5 rounded-2xl border ${bgColor} ${borderColor} backdrop-blur-xl relative overflow-hidden select-none group`}
     >
-      {/* Dynamic Golden Corner Accent */}
+
       <div className={`absolute top-0 right-0 w-12 h-[1px] bg-gradient-to-l from-[#e1dcc9]/30 to-transparent`} />
       <div className={`absolute top-0 right-0 w-[1px] h-12 bg-gradient-to-b from-[#e1dcc9]/30 to-transparent`} />
 
-      {/* Dynamic Icon */}
+
       <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${accentColor} animate-pulse`} />
 
-      {/* Main message */}
+
       <div className="flex-1 space-y-1">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#e1dcc9]/50">
           {type === "info" ? "Platform Intel" : `${type} transmission`}
@@ -139,7 +135,7 @@ function ToastItem({ toast, onClose }) {
         </p>
       </div>
 
-      {/* Close button */}
+
       <button
         onClick={() => onClose(id)}
         className="w-6 h-6 rounded-lg flex items-center justify-center bg-[#e1dcc9]/2 hover:bg-[#e1dcc9]/8 border border-[#e1dcc9]/5 hover:border-[#e1dcc9]/15 text-[#e1dcc9]/55 hover:text-white transition-all cursor-pointer"
@@ -150,9 +146,6 @@ function ToastItem({ toast, onClose }) {
   );
 }
 
-/**
- * Custom hook to trigger premium notifications in functional React components.
- */
 export function useToast() {
   const context = useContext(ToastContext);
   if (!context) {

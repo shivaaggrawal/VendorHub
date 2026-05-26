@@ -5,9 +5,9 @@ import { Sparkles, Activity } from "lucide-react";
 import api from "../services/api";
 import CountdownWatch from "../components/CountdownWatch";
 
-/* ────────────────────────────────────────────── */
-/*  Interactive Rotating Concentric Globe Grid   */
-/* ────────────────────────────────────────────── */
+
+
+
 const GlobeGrid = () => (
   <svg
     viewBox="0 0 800 800"
@@ -25,9 +25,6 @@ const GlobeGrid = () => (
   </svg>
 );
 
-/* ────────────────────────────────────────────── */
-/*  Continuously Animated SVG Dotted Curve Line  */
-/* ────────────────────────────────────────────── */
 const DottedPath = () => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -56,9 +53,6 @@ const DottedPath = () => (
   </svg>
 );
 
-/* ────────────────────────────────────────────── */
-/*  Floating Champagne Light Particles           */
-/* ────────────────────────────────────────────── */
 const FloatingParticles = () => {
   const particles = Array.from({ length: 16 });
   return (
@@ -93,9 +87,6 @@ const FloatingParticles = () => {
   );
 };
 
-/* ────────────────────────────────────────────── */
-/*  Handcrafted Premium Wireframe Shopping Cart  */
-/* ────────────────────────────────────────────── */
 const LuxuryCart = () => (
   <svg
     viewBox="0 0 100 100"
@@ -106,16 +97,16 @@ const LuxuryCart = () => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    {/* Basket core chassis */}
+
     <path d="M22 26 h56 l-8 36 h-40 l-8 -36 Z" strokeWidth="1.75" />
-    {/* Handle / Chassis base */}
+
     <path d="M12 16 h10 l8 36 h46" />
-    {/* Wheels */}
+
     <circle cx="34" cy="76" r="6" fill="#e1dcc9" />
     <circle cx="66" cy="76" r="6" fill="#e1dcc9" />
     <circle cx="34" cy="76" r="2" fill="#000000" />
     <circle cx="66" cy="76" r="2" fill="#000000" />
-    {/* Luxury line grids */}
+
     <path d="M31 26 l4 36" opacity="0.25" />
     <path d="M41 26 l3 36" opacity="0.25" />
     <path d="M50 26 l1 36" opacity="0.25" />
@@ -123,7 +114,7 @@ const LuxuryCart = () => (
     <path d="M68 26 l-5 36" opacity="0.25" />
     <path d="M23 38 h54" opacity="0.25" />
     <path d="M25 50 h50" opacity="0.25" />
-    {/* Glowing orb inside cart representing AI Intelligence */}
+
     <circle cx="50" cy="44" r="10" fill="url(#coreGlow)" className="animate-pulse" />
     <defs>
       <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
@@ -161,14 +152,14 @@ const AuthLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-[#000000] text-[#f5f5f5] overflow-x-hidden font-sans relative">
-      
-      {/* ── Background Aesthetic Glows ──────── */}
+
+
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(65,45,21,0.18),transparent_40%),radial-gradient(circle_at_70%_80%,rgba(31,21,12,0.4),transparent_50%)] pointer-events-none z-0" />
 
-      {/* ── Left Panel - Cinematic Visuals ──── */}
+
       <div className="hidden lg:flex lg:w-[48%] xl:w-[50%] relative overflow-hidden bg-gradient-to-br from-black via-[#0c0906] to-black lg:border-r border-[#412d15]/30 lg:p-16 flex-col justify-between lg:min-h-screen z-10">
-        
-        {/* Style block for hardware accelerated slow pan/zoom animation */}
+
+
         <style>{`
           @keyframes slow-pan {
             0% { transform: scale(1.05) translate(0px, 0px); }
@@ -177,26 +168,26 @@ const AuthLayout = () => {
           }
         `}</style>
 
-        {/* Absolute Background Image underlay */}
+
         <div className="absolute inset-0 z-0 opacity-[0.16] mix-blend-luminosity filter contrast-[1.2] brightness-[0.7] pointer-events-none overflow-hidden">
-          <img 
-            src="/auth-bg.png" 
-            alt="Luxury apparel preview" 
-            className="w-full h-full object-cover scale-105" 
+          <img
+            src="/auth-bg.png"
+            alt="Luxury apparel preview"
+            className="w-full h-full object-cover scale-105"
             style={{ animation: "slow-pan 22s ease-in-out infinite alternate" }}
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/55 z-0 pointer-events-none" />
 
-        {/* Glowing visual layout helper */}
+
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(225,220,201,0.02),transparent_60%)] pointer-events-none z-0" />
 
-        {/* Dynamic elements */}
+
         <GlobeGrid />
         <DottedPath />
         <FloatingParticles />
 
-        {/* Brand Header */}
+
         <div className="relative z-10 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <span className="text-lg font-black tracking-[0.2em] text-[#e1dcc9]">
@@ -210,11 +201,11 @@ const AuthLayout = () => {
           </span>
         </div>
 
-        {/* Centerpiece: Animated Path-Following Shopping Cart */}
+
         <div className="my-auto py-12 flex items-center justify-center relative min-h-[160px] sm:min-h-[220px]">
-          {/* Glowing pedestal behind the cart */}
+
           <div className="absolute w-44 h-44 bg-[#412d15]/15 rounded-full blur-[80px] pointer-events-none" />
-          
+
           <motion.div
             className="relative z-10"
             animate={{
@@ -229,7 +220,7 @@ const AuthLayout = () => {
               mass: 1.2,
             }}
           >
-            {/* Secondary micro-float wrapper for realistic hover effect */}
+
             <motion.div
               animate={{
                 y: [0, -10, 0],
@@ -245,7 +236,7 @@ const AuthLayout = () => {
           </motion.div>
         </div>
 
-        {/* Editorial Text & Timer */}
+
         <div className="relative z-10 space-y-8">
           <div>
             <div className="flex items-center gap-2 text-[#e1dcc9] mb-3">
@@ -261,33 +252,33 @@ const AuthLayout = () => {
             <p className="mt-3 max-w-sm text-xs leading-relaxed text-[#e1dcc9]/60 font-light">
               Experience the future of multi-vendor drops, real-time bid synchronizations, and luxury fashion technology at your fingertips.
             </p>
-            
+
           </div>
         </div>
       </div>
 
-      {/* ── Right Panel - Smooth Forms ──────── */}
+
       <div className="flex-1 flex items-center justify-center px-4 sm:px-8 py-6 sm:py-10 lg:py-16 z-10 bg-gradient-to-t from-black via-black/95 to-[#050403] relative min-h-screen">
-        
-        {/* Mobile background underlay */}
+
+
         <div className="absolute inset-0 z-0 lg:hidden opacity-[0.05] mix-blend-luminosity pointer-events-none overflow-hidden">
-          <img 
-            src="/auth-bg.png" 
-            alt="Background underlay" 
-            className="w-full h-full object-cover blur-[2px]" 
+          <img
+            src="/auth-bg.png"
+            alt="Background underlay"
+            className="w-full h-full object-cover blur-[2px]"
           />
         </div>
 
-        {/* Subtle luxury digital grid watermark to fill spacing */}
+
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f150c_1px,transparent_1px),linear-gradient(to_bottom,#1f150c_1px,transparent_1px)] bg-[size:4.5rem_4.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_40%,transparent_100%)] opacity-[0.15] pointer-events-none" />
 
-        {/* Cinematic multi-layered glowing light leaks for forms */}
+
         <div className="absolute top-1/4 right-1/4 w-[380px] h-[380px] bg-[#412d15]/10 rounded-full blur-[110px] pointer-events-none animate-pulse" />
         <div className="absolute bottom-1/4 left-1/4 w-[450px] h-[450px] bg-[#e1dcc9]/3 rounded-full blur-[130px] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] sm:w-[600px] sm:h-[600px] bg-[radial-gradient(circle,rgba(65,45,21,0.09)_0%,rgba(225,220,201,0.03)_50%,transparent_100%)] rounded-full blur-[90px] pointer-events-none" />
 
         <div className="w-full max-w-md sm:max-w-[460px] md:max-w-[480px] lg:max-w-[500px] xl:max-w-[530px] relative z-10 px-2">
-          {/* Sleek text-only logo visible ONLY on mobile/tablet */}
+
           <div className="lg:hidden flex justify-center mb-5">
             <Link to="/" className="flex items-center gap-2">
               <span className="text-xl font-black tracking-[0.25em] text-[#e1dcc9] font-oswald">
@@ -296,7 +287,7 @@ const AuthLayout = () => {
             </Link>
           </div>
 
-          {/* Framer motion transition container for route-based form changes */}
+
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

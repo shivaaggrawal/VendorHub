@@ -85,7 +85,7 @@ const SellersPage = () => {
         const { data } = await api.get("/products?limit=100");
         const products = data.products || data || [];
 
-        // Aggregate sellers from products
+
         const sellerMap = {};
         products.forEach((product) => {
           const seller = product.sellerId;
@@ -140,7 +140,7 @@ const SellersPage = () => {
         className="pt-6 sm:pt-10 pb-16 bg-[#000000]"
     >
       <div className="container mx-auto px-4 md:px-6">
-        {/* Header */}
+
         <motion.div
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -159,7 +159,7 @@ const SellersPage = () => {
           </p>
         </motion.div>
 
-        {/* Seller Cards Grid */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {sellers.map((seller, idx) => (
             <motion.div
@@ -172,7 +172,7 @@ const SellersPage = () => {
                 onMouseMove={handleMouseMove}
                 className="bg-[#1f150c] border border-[#412d15] rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-500 group relative spotlight-card"
               >
-                {/* Banner */}
+
                 <div className="relative h-40 overflow-hidden">
                   <img
                     src={seller.banner}
@@ -183,21 +183,21 @@ const SellersPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1f150c] via-[#1f150c]/40 to-transparent" />
                 </div>
 
-                {/* Avatar & Info */}
+
                 <div className="relative px-6 pb-6 -mt-10 z-10">
-                  {/* Avatar */}
+
                   <div className="w-16 h-16 rounded-xl gradient-primary flex items-center justify-center shadow-glow-bronze border-4 border-[#1f150c] mb-4">
                     <span className="text-[#e1dcc9] font-anton text-2xl uppercase">
                       {seller.storeName[0]}
                     </span>
                   </div>
 
-                  {/* Store Name */}
+
                   <h3 className="text-2xl font-anton uppercase tracking-wider text-white mb-2 group-hover:text-[#e1dcc9] transition-colors duration-300">
                     {seller.storeName}
                   </h3>
 
-                  {/* Rating & Location */}
+
                   <div className="flex items-center gap-3 mb-3">
                     <div className="flex items-center gap-1 text-[#e1dcc9]">
                       <Star className="w-4 h-4 fill-[#e1dcc9]" />
@@ -212,13 +212,13 @@ const SellersPage = () => {
                     </div>
                   </div>
 
-                  {/* Product Count */}
+
                   <div className="flex items-center gap-2 text-xs text-white/60 font-sans mb-6">
                     <Package className="w-4 h-4 text-[#e1dcc9]/70" />
                     <span>{seller.productCount} products listed</span>
                   </div>
 
-                  {/* Visit Store */}
+
                   <Link
                     to={`/explore?search=${encodeURIComponent(
                       seller.storeName

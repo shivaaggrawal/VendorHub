@@ -10,7 +10,7 @@ export default function AdminProducts() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch all products across the platform
+
   const { data: productsData, isLoading, error, refetch } = useQuery({
     queryKey: ["adminAllProducts"],
     queryFn: async () => {
@@ -19,7 +19,7 @@ export default function AdminProducts() {
     },
   });
 
-  // Admin delete product mutation
+
   const deleteProductMutation = useMutation({
     mutationFn: async (id) => {
       const res = await api.delete(`/products/${id}`);
@@ -47,7 +47,7 @@ export default function AdminProducts() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
@@ -59,7 +59,7 @@ export default function AdminProducts() {
         </div>
       </div>
 
-      {/* Control row */}
+
       <div className="flex items-center gap-3 bg-secondary/35 border border-[#412d15]/30 rounded-xl p-3 max-w-md">
         <Search className="w-4 h-4 text-muted-foreground" />
         <input
@@ -71,7 +71,7 @@ export default function AdminProducts() {
         />
       </div>
 
-      {/* Table */}
+
       <div className="bg-[#1f150c]/10 border border-[#412d15]/30 rounded-2xl overflow-hidden shadow-premium">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
@@ -107,7 +107,7 @@ export default function AdminProducts() {
                 </tr>
               ) : (
                 filteredProducts.map((product) => {
-                  const firstImage = product.images?.[0]?.url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&q=80";
+                  const firstImage = product.images?.[0]?.url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=80";
 
                   return (
                     <tr

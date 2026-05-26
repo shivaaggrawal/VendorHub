@@ -35,7 +35,7 @@ export default function SellerSettings() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      {/* Header */}
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
           Store Settings
@@ -51,7 +51,7 @@ export default function SellerSettings() {
         </div>
       )}
 
-      {/* Main Settings Card */}
+
       <div className="bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
 

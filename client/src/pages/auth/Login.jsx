@@ -9,7 +9,7 @@ import { login, clearError } from "../../redux/slices/authSlice";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -56,14 +56,14 @@ function Login() {
 
   return (
     <div className="w-full">
-      {/* Premium Glassmorphic Card Container */}
+
       <div className="glass-card rounded-[2rem] sm:rounded-[2.5rem] border border-[#e1dcc9]/10 bg-[#1f150c]/25 p-5 sm:p-8 md:p-10 shadow-[0_32px_80px_rgba(0,0,0,0.85)] relative overflow-hidden backdrop-blur-3xl">
-        
-        {/* Subtle interior lighting effects */}
+
+
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#e1dcc9]/3 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#412d15]/20 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Form Header */}
+
         <div className="text-center mb-5 sm:mb-8 relative z-10">
           <span className="inline-flex rounded-full border border-[#e1dcc9]/12 bg-[#e1dcc9]/5 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-[#e1dcc9]/85 mb-2.5 sm:mb-3 font-semibold">
             Member Portal
@@ -76,7 +76,7 @@ function Login() {
           </p>
         </div>
 
-        {/* Error Alert Box */}
+
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -91,10 +91,10 @@ function Login() {
           </motion.div>
         )}
 
-        {/* Login Form */}
+
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 relative z-10">
-          
-          {/* Email Address Input */}
+
+
           <div className="space-y-1.5 group relative">
             <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1dcc9]/60 group-focus-within:text-[#e1dcc9] transition-colors duration-200">
               Email Address
@@ -113,7 +113,7 @@ function Login() {
             </div>
           </div>
 
-          {/* Password Input */}
+
           <div className="space-y-1.5 group relative">
             <div className="flex items-center justify-between">
               <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1dcc9]/60 group-focus-within:text-[#e1dcc9] transition-colors duration-200">
@@ -140,7 +140,7 @@ function Login() {
             </div>
           </div>
 
-          {/* Premium Glowing CTA Submit Button */}
+
           <Button
             type="submit"
             variant="premium"
@@ -163,7 +163,7 @@ function Login() {
         </form>
       </div>
 
-      {/* Elegant Subtext Footer Link */}
+
       <div className="text-center mt-6">
         <p className="text-xs text-[#e1dcc9]/45 font-light">
           Don&apos;t have an account?{" "}

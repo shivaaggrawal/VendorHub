@@ -3,7 +3,7 @@ const path = require("path");
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
-// Custom log format
+
 const logFormat = printf(({ level, message, timestamp, stack }) => {
   return `${timestamp} [${level}]: ${stack || message}`;
 });
@@ -16,16 +16,16 @@ const logger = winston.createLogger({
     logFormat
   ),
   transports: [
-    // Console transport with colors in dev
+
     new winston.transports.Console({
       format: combine(colorize(), timestamp({ format: "HH:mm:ss" }), logFormat),
     }),
-    // File transport for errors
+
     new winston.transports.File({
       filename: path.join(__dirname, "../logs/error.log"),
       level: "error",
     }),
-    // File transport for all logs
+
     new winston.transports.File({
       filename: path.join(__dirname, "../logs/combined.log"),
     }),

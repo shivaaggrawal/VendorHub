@@ -24,7 +24,7 @@ import ProductCard from "../components/ProductCard";
 import api from "../services/api";
 import { useDelayedLoader } from "../lib/loadingUtils";
 
-/* ── Fallback Data (Inspired by RAWBLOX Streetwear) ────────── */
+
 const FALLBACK_PRODUCTS = [
   {
     _id: "f1",
@@ -144,7 +144,7 @@ const CATEGORIES = [
   },
 ];
 
-/* ── Animation Helpers ─────────────────────────────────────── */
+
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   visible: (i = 0) => ({
@@ -158,7 +158,7 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.06 } },
 };
 
-/* ── Skeleton Card ─────────────────────────────────────────── */
+
 const SkeletonCard = () => (
   <div className="bg-card border border-border rounded-2xl shadow-premium overflow-hidden">
     <div className="aspect-[3/4] skeleton" />
@@ -173,7 +173,7 @@ const SkeletonCard = () => (
   </div>
 );
 
-/* ── Hero Slides Data (Inspired by RAWBLOX) ─────────────────── */
+
 const HERO_SLIDES = [
   {
     number: "01",
@@ -212,9 +212,9 @@ const HERO_SLIDES = [
   }
 ];
 
-/* ══════════════════════════════════════════════════════════════
-   LANDING PAGE
-   ══════════════════════════════════════════════════════════════ */
+
+
+
 const tileArray = (arr, minItems = 12) => {
   if (!arr || arr.length === 0) return [];
   let tiled = [...arr];
@@ -232,9 +232,9 @@ const getProductImage = (item) => {
 
 const getProductTitle = (item) => item?.title || item?.name || "VendorHub Drop";
 
-/* ══════════════════════════════════════════════════════════════
-   LANDING PAGE
-   ══════════════════════════════════════════════════════════════ */
+
+
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -242,7 +242,7 @@ const LandingPage = () => {
   const showLoader = useDelayedLoader(loading, { delay: 300, minimumShowTime: 500 });
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
-  const [activeSlide, setActiveSlide] = useState(4); // Match the rawblox slide 05 initial load
+  const [activeSlide, setActiveSlide] = useState(4);
   const [recs, setRecs] = useState({
     recommendedForYou: [],
     frequentlyBoughtTogether: [],
@@ -268,7 +268,7 @@ const LandingPage = () => {
           setRemainingSeconds(diff);
         }
       } catch (err) {
-        // Fallback default
+
         const diff = Math.max(0, Math.floor((new Date(timerSettings.expiresAt).getTime() - Date.now()) / 1000));
         setRemainingSeconds(diff);
       }
@@ -293,7 +293,7 @@ const LandingPage = () => {
 
   const timeParts = useMemo(() => {
     const seconds = remainingSeconds;
-    const totalHours = Math.floor(seconds / 3600); // fold days into hours
+    const totalHours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
     return {
@@ -305,7 +305,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch Products
+
       try {
         const { data } = await api.get("/products?limit=8");
         const list = data?.products || data?.data || data || [];
@@ -317,7 +317,7 @@ const LandingPage = () => {
         setLoading(false);
       }
 
-      // Fetch Recommendations
+
       try {
         const { data } = await api.get("/recommendations");
         const results = data?.data || data || {};
@@ -335,7 +335,7 @@ const LandingPage = () => {
     fetchData();
   }, []);
 
-  // Slide auto rotation
+
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
@@ -350,13 +350,11 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-hidden">
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          HERO SECTION (RAWBLOX Style Overhaul)
-         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+
       <section className="container mx-auto px-4 md:px-6 pt-6 sm:pt-8 pb-8">
         <div className="relative w-full aspect-[16/10] md:aspect-[16/9] min-h-[480px] md:min-h-[640px] rounded-[32px] overflow-hidden border border-[#412d15]/50 shadow-2xl flex flex-col justify-between p-6 md:p-12 lg:p-16 select-none bg-black">
-          
-          {/* Animated Background Slides */}
+
+
           {HERO_SLIDES.map((slide, index) => (
             <motion.div
               key={slide.number}
@@ -373,16 +371,16 @@ const LandingPage = () => {
                 animate={{ scale: index === activeSlide ? 1.08 : 1.01 }}
                 transition={{ duration: 7, ease: "linear" }}
               />
-              {/* Double Gradient Overlay for outstanding text contrast */}
+
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/15" />
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent" />
             </motion.div>
           ))}
 
-          {/* Top element: Empty to push content to bottom */}
+
           <div className="relative z-10" />
 
-          {/* Main Copy Area */}
+
           <div className="relative z-10 max-w-3xl mt-auto mb-6 md:mb-10">
             <motion.div
               key={`content-${activeSlide}`}
@@ -413,7 +411,7 @@ const LandingPage = () => {
             </motion.div>
           </div>
 
-          {/* Bottom Segment-based Slider Navigation */}
+
           <div className="relative z-10 border-t border-white/10 pt-5 md:pt-6">
             <div className="grid grid-cols-5 gap-3 md:gap-6">
               {HERO_SLIDES.map((slide, index) => {
@@ -424,7 +422,7 @@ const LandingPage = () => {
                     onClick={() => setActiveSlide(index)}
                     className="flex flex-col text-left group outline-none cursor-pointer"
                   >
-                    {/* Horizontal slider progress bar */}
+
                     <div className="w-full h-[2.5px] bg-white/20 relative mb-3">
                       {isActive && (
                         <motion.div
@@ -436,7 +434,7 @@ const LandingPage = () => {
                       )}
                     </div>
 
-                    {/* Sub-text info */}
+
                     <span className={`text-[10px] md:text-xs font-bold tracking-wider ${isActive ? 'text-white font-black' : 'text-white/40 group-hover:text-white/60'} transition-colors`}>
                       {slide.number}
                     </span>
@@ -451,9 +449,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          CATEGORIES SECTION
-         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+
       <section className="py-10 sm:py-16 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
@@ -522,9 +518,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          NEW DROPS SECTION (RAWBLOX Style)
-         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+
       <section className="py-10 sm:py-16 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
@@ -560,7 +554,7 @@ const LandingPage = () => {
               </Link>
             </motion.div>
           </motion.div>
- 
+
           {showLoader ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
               {Array.from({ length: 3 }, (_, i) => (
@@ -574,8 +568,8 @@ const LandingPage = () => {
               ))}
             </div>
           )}
- 
-          {/* Mobile View All */}
+
+
           <div className="mt-12 text-center sm:hidden">
             <Button variant="outline" asChild className="rounded-full px-6">
               <Link to="/explore" className="gap-2 text-xs uppercase tracking-widest font-oswald">
@@ -587,11 +581,9 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          AI POWERED RECOMMENDATIONS & AUTO-SCROLL CAROUSELS
-         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+
       <section className="py-12 sm:py-16 bg-black/40 border-t border-b border-[#412d15]/30 relative overflow-hidden">
-        {/* Glow accent */}
+
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container mx-auto px-4 md:px-6 mb-12">
@@ -609,9 +601,9 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Carousel Containers */}
+
         <div className="space-y-12">
-          {/* Row 1: Recommended For You */}
+
           <div>
             <p className="text-[10px] font-bold text-[#e1dcc9]/70 tracking-widest uppercase mb-3 px-6 md:px-12 flex items-center gap-1.5 font-oswald">
               <Sparkles className="w-3 h-3 text-yellow-300 animate-pulse" />
@@ -620,7 +612,7 @@ const LandingPage = () => {
             <div className="marquee-group w-full overflow-hidden relative select-none">
               <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
               <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-              
+
               <div className="flex w-max gap-6 py-2 animate-marquee">
                 {tileArray(recs.recommendedForYou.length > 0 ? recs.recommendedForYou : products).map((item, idx) => (
                   <Link
@@ -644,7 +636,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Row 2: Frequently Bought Together */}
+
           <div>
             <p className="text-[10px] font-bold text-[#e1dcc9]/70 tracking-widest uppercase mb-3 px-6 md:px-12 flex items-center gap-1.5 font-oswald">
               <ShoppingBag className="w-3 h-3 text-primary animate-pulse" />
@@ -653,7 +645,7 @@ const LandingPage = () => {
             <div className="marquee-group w-full overflow-hidden relative select-none">
               <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
               <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-              
+
               <div className="flex w-max gap-6 py-2 animate-marquee" style={{ animationDirection: "reverse" }}>
                 {tileArray(recs.frequentlyBoughtTogether.length > 0 ? recs.frequentlyBoughtTogether : products).map((item, idx) => (
                   <Link
@@ -677,7 +669,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Row 3: Similar Products */}
+
           <div>
             <p className="text-[10px] font-bold text-[#e1dcc9]/70 tracking-widest uppercase mb-3 px-6 md:px-12 flex items-center gap-1.5 font-oswald">
               <Heart className="w-3 h-3 text-red-400" />
@@ -686,7 +678,7 @@ const LandingPage = () => {
             <div className="marquee-group w-full overflow-hidden relative select-none">
               <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
               <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-              
+
               <div className="flex w-max gap-6 py-2 animate-marquee">
                 {tileArray(recs.similarProducts.length > 0 ? recs.similarProducts : products).map((item, idx) => (
                   <Link
@@ -710,7 +702,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Row 4: Trending Near You */}
+
           <div>
             <p className="text-[10px] font-bold text-[#e1dcc9]/70 tracking-widest uppercase mb-3 px-6 md:px-12 flex items-center gap-1.5 font-oswald">
               <MapPin className="w-3 h-3 text-primary animate-pulse" />
@@ -719,7 +711,7 @@ const LandingPage = () => {
             <div className="marquee-group w-full overflow-hidden relative select-none">
               <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
               <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-              
+
               <div className="flex w-max gap-6 py-2 animate-marquee" style={{ animationDirection: "reverse" }}>
                 {tileArray(recs.trendingNearYou.length > 0 ? recs.trendingNearYou : products).map((item, idx) => (
                   <Link
@@ -743,7 +735,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Row 5: Inspired By Your Browsing */}
+
           <div>
             <p className="text-[10px] font-bold text-[#e1dcc9]/70 tracking-widest uppercase mb-3 px-6 md:px-12 flex items-center gap-1.5 font-oswald">
               <Zap className="w-3 h-3 text-yellow-300" />
@@ -752,7 +744,7 @@ const LandingPage = () => {
             <div className="marquee-group w-full overflow-hidden relative select-none">
               <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
               <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-              
+
               <div className="flex w-max gap-6 py-2 animate-marquee">
                 {tileArray(recs.inspiredByBrowsing.length > 0 ? recs.inspiredByBrowsing : products).map((item, idx) => (
                   <Link
@@ -778,12 +770,10 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          FLASH DEALS BANNER
-         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+
       <section className="relative overflow-hidden">
         <div className="bg-gradient-to-r from-primary via-primary/95 to-accent py-16 md:py-20">
-          {/* Decorative circles */}
+
           <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
           <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3" />
 
@@ -825,7 +815,7 @@ const LandingPage = () => {
                 custom={3}
                 className="flex flex-col sm:flex-row items-center gap-4"
               >
-                {/* Countdown-style badges */}
+
                 <div className="flex gap-2">
                   {[
                     { val: timeParts.hours, unit: "HRS" },
@@ -859,11 +849,9 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          NEWSLETTER
-         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+
       <section className="py-12 sm:py-16 relative overflow-hidden">
-        {/* Subtle gradient BG */}
+
         <div className="absolute inset-0 gradient-mesh opacity-60 pointer-events-none" />
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">

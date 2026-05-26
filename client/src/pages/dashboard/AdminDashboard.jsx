@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { DelayedSuspenseFallback } from "../../lib/loadingUtils";
 
-// Lazy-loaded subcomponents for code separation & performance
+
 const AdminOverview = lazy(() => import("./admin/AdminOverview"));
 const AdminProducts = lazy(() => import("./admin/AdminProducts"));
 const AdminUsers = lazy(() => import("./admin/AdminUsers"));

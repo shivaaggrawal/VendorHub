@@ -1,4 +1,4 @@
-/** Order lifecycle statuses */
+
 const ORDER_STATUS = Object.freeze({
   PLACED: "Placed",
   CONFIRMED: "Confirmed",
@@ -7,7 +7,7 @@ const ORDER_STATUS = Object.freeze({
   CANCELLED: "Cancelled",
 });
 
-/** Payment statuses */
+
 const PAYMENT_STATUS = Object.freeze({
   PENDING: "Pending",
   PAID: "Paid",

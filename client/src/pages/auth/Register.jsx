@@ -53,14 +53,14 @@ function Register() {
 
   return (
     <div className="w-full">
-      {/* Premium Glassmorphic Card Container */}
+
       <div className="glass-card rounded-[2rem] sm:rounded-[2.5rem] border border-[#e1dcc9]/10 bg-[#1f150c]/25 p-5 sm:p-8 md:p-10 shadow-[0_32px_80px_rgba(0,0,0,0.85)] relative overflow-hidden backdrop-blur-3xl">
-        
-        {/* Subtle interior lighting effects */}
+
+
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#e1dcc9]/3 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#412d15]/20 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Form Header */}
+
         <div className="text-center mb-5 sm:mb-8 relative z-10">
           <span className="inline-flex rounded-full border border-[#e1dcc9]/12 bg-[#e1dcc9]/5 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-[#e1dcc9]/85 mb-2.5 sm:mb-3 font-semibold">
             Gateway Access
@@ -73,7 +73,7 @@ function Register() {
           </p>
         </div>
 
-        {/* Error Alert Box */}
+
         {(localError || error) && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -88,10 +88,10 @@ function Register() {
           </motion.div>
         )}
 
-        {/* Registration Form */}
+
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 relative z-10">
-          
-          {/* Custom Role Selector Tabs */}
+
+
           <div className="space-y-1.5">
             <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1dcc9]/60">
               Select Profile Role
@@ -122,7 +122,7 @@ function Register() {
             </div>
           </div>
 
-          {/* Full Name Input */}
+
           <div className="space-y-1.5 group relative">
             <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1dcc9]/60 group-focus-within:text-[#e1dcc9] transition-colors duration-200">
               Full Name
@@ -141,7 +141,7 @@ function Register() {
             </div>
           </div>
 
-          {/* Email Address Input */}
+
           <div className="space-y-1.5 group relative">
             <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1dcc9]/60 group-focus-within:text-[#e1dcc9] transition-colors duration-200">
               Email Address
@@ -160,7 +160,7 @@ function Register() {
             </div>
           </div>
 
-          {/* Password Input */}
+
           <div className="space-y-1.5 group relative">
             <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1dcc9]/60 group-focus-within:text-[#e1dcc9] transition-colors duration-200">
               Create Password
@@ -179,9 +179,9 @@ function Register() {
               />
             </div>
 
-            {/* Dynamic Password Strength / Guidelines Check */}
+
             {password.length > 0 && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 className="space-y-1.5 px-1 py-0.5 mt-1"
@@ -202,7 +202,7 @@ function Register() {
             )}
           </div>
 
-          {/* Seller Approvals Dynamic Warning Notice */}
+
           <AnimatePresence>
             {role === "seller" && (
               <motion.div
@@ -222,7 +222,7 @@ function Register() {
             )}
           </AnimatePresence>
 
-          {/* Premium Glowing CTA Submit Button */}
+
           <Button
             type="submit"
             variant="premium"
@@ -245,7 +245,7 @@ function Register() {
         </form>
       </div>
 
-      {/* Elegant Subtext Footer Link */}
+
       <div className="text-center mt-6">
         <p className="text-xs text-[#e1dcc9]/45 font-light">
           Already have an account?{" "}

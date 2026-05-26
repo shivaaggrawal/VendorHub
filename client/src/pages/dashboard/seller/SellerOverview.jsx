@@ -32,9 +32,9 @@ const itemVariants = {
 
 export default function SellerOverview() {
   const [selectedProductPrice, setSelectedProductPrice] = useState(9900);
-  const [selectedCompetitorMargin, setSelectedCompetitorMargin] = useState(15); // in %
+  const [selectedCompetitorMargin, setSelectedCompetitorMargin] = useState(15);
 
-  // Fetch Dashboard Stats from API
+
   const { data: stats, isLoading, error, refetch } = useQuery({
     queryKey: ["sellerDashboardStats"],
     queryFn: async () => {
@@ -43,12 +43,12 @@ export default function SellerOverview() {
     },
   });
 
-  // Derived calculations for AI smart suggestions
+
   const minCompetitorPrice = Math.max(100, Math.round(selectedProductPrice * 0.85));
   const maxCompetitorPrice = Math.round(selectedProductPrice * 1.15);
   const suggestedPrice = Math.round((minCompetitorPrice * 0.4) + (maxCompetitorPrice * 0.6));
-  
-  // Calculate projected demand based on selected price compared to suggested price
+
+
   const percentDiff = ((selectedProductPrice - suggestedPrice) / suggestedPrice) * 100;
   let demandIndex;
   let demandColor;
@@ -126,7 +126,7 @@ export default function SellerOverview() {
         animate="visible"
         className="space-y-8"
       >
-      {/* Welcome Title */}
+
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
@@ -141,7 +141,7 @@ export default function SellerOverview() {
         </div>
       </motion.div>
 
-      {/* Stats Grid */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {statItems.map((item) => {
           const Icon = item.icon;
@@ -151,7 +151,7 @@ export default function SellerOverview() {
               variants={itemVariants}
               className={`relative overflow-hidden bg-gradient-to-br ${item.color} border rounded-2xl p-6 shadow-premium hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300 group`}
             >
-              {/* Highlight backdrop */}
+
               <div className="absolute top-0 right-0 w-32 h-32 bg-radial-gradient from-primary/5 to-transparent rounded-full blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
               <div className="flex items-start justify-between mb-4">
                 <div className="w-10 h-10 rounded-xl bg-[#412d15]/60 flex items-center justify-center border border-[#e1dcc9]/10">
@@ -172,16 +172,16 @@ export default function SellerOverview() {
         })}
       </div>
 
-      {/* Main Insights Panel & AI Pricing Widget */}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* AI Competitor Pricing & Sales Projections Widget */}
+
         <motion.div
           variants={itemVariants}
           className="lg:col-span-2 bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium relative overflow-hidden flex flex-col justify-between"
         >
-          {/* Ambient lighting element */}
+
           <div className="absolute -top-24 -left-24 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-          
+
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -200,7 +200,7 @@ export default function SellerOverview() {
               </span>
             </div>
 
-            {/* Inputs Panel */}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-4 rounded-xl bg-black/30 border border-[#412d15]/40">
               <div className="space-y-2">
                 <div className="flex justify-between text-xs">
@@ -242,7 +242,7 @@ export default function SellerOverview() {
               </div>
             </div>
 
-            {/* Smart Pricing Target Projections */}
+
             <div className="grid grid-cols-3 gap-3 md:gap-4 mt-6">
               <div className="p-3.5 rounded-xl bg-[#1f150c]/40 border border-[#412d15]/40 text-center">
                 <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">AI Elastic Range</p>
@@ -264,7 +264,7 @@ export default function SellerOverview() {
               </div>
             </div>
 
-            {/* Dynamic Forecast Narrative */}
+
             <div className="mt-5 p-4 rounded-xl bg-amber-950/15 border border-amber-900/20 text-xs text-muted-foreground flex gap-3">
               <Info className="w-4 h-4 text-[#e1dcc9] shrink-0 mt-0.5" />
               <div>
@@ -286,7 +286,7 @@ export default function SellerOverview() {
             </div>
           </div>
 
-          {/* Forecasting Totals */}
+
           <div className="mt-6 pt-5 border-t border-[#412d15]/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-transparent to-[#412d15]/10 p-3 rounded-xl">
             <div>
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Expected Weekly Gross Projections</p>
@@ -309,7 +309,7 @@ export default function SellerOverview() {
           </div>
         </motion.div>
 
-        {/* Low Stock Alerts & Live Activity Panel */}
+
         <motion.div
           variants={itemVariants}
           className="bg-[#1f150c]/30 backdrop-blur-xl border border-[#412d15]/50 rounded-2xl p-6 shadow-premium flex flex-col justify-between"
@@ -325,7 +325,7 @@ export default function SellerOverview() {
               </div>
             </div>
 
-            {/* Warning list */}
+
             <div className="space-y-3 mt-4">
               {stats?.lowStockAlerts && stats.lowStockAlerts.length > 0 ? (
                 stats.lowStockAlerts.map((product) => (
@@ -354,7 +354,7 @@ export default function SellerOverview() {
             </div>
           </div>
 
-          {/* Action Footer */}
+
           <div className="mt-6 pt-5 border-t border-[#412d15]/50 text-center">
             <div className="p-3.5 rounded-xl bg-[#412d15]/20 border border-[#e1dcc9]/5 flex items-center gap-3 text-left">
               <HelpCircle className="w-5 h-5 text-[#e1dcc9]/85 shrink-0" />

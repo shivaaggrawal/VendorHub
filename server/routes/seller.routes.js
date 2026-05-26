@@ -6,7 +6,7 @@ const {
 } = require("../controllers/seller.controller");
 const { verifyToken, checkRole } = require("../middleware/auth.middleware");
 
-// All seller routes require an approved seller account
+
 router.use(verifyToken, checkRole(["seller"]));
 
 router.get("/dashboard",       getDashboardSummary);

@@ -5,7 +5,7 @@ const ApiResponse  = require("../utils/ApiResponse");
 const asyncHandler = require("../utils/asyncHandler");
 const { PAYMENT_STATUS } = require("../constants/orderStatus");
 
-// ── GET /api/seller/dashboard ─────────────────────────────────────────────
+
 const getDashboardSummary = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
 
@@ -29,7 +29,7 @@ const getDashboardSummary = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
-// ── GET /api/seller/earnings/weekly ──────────────────────────────────────
+
 const getWeeklySales = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
   const sevenDaysAgo = new Date();
@@ -56,7 +56,7 @@ const getWeeklySales = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Weekly sales fetched.", weekly).send(res);
 });
 
-// ── GET /api/seller/products/top ──────────────────────────────────────────
+
 const getTopSellingProducts = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
 
@@ -79,7 +79,7 @@ const getTopSellingProducts = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Top selling products fetched.", topProducts).send(res);
 });
 
-// ── GET /api/seller/orders/incoming ──────────────────────────────────────
+
 const getIncomingOrders = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, status } = req.query;
   const orderService = require("../services/order.service");
@@ -91,7 +91,7 @@ const getIncomingOrders = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Incoming orders fetched.", result.orders, result.meta).send(res);
 });
 
-// ── GET /api/seller/products ──────────────────────────────────────────────
+
 const getMyProducts = asyncHandler(async (req, res) => {
   const { page = 1, limit = 12 } = req.query;
   const skip  = (parseInt(page) - 1) * parseInt(limit);

@@ -10,13 +10,13 @@ const validate = (req) => {
   if (!errors.isEmpty()) throw new ApiError(422, "Validation failed", errors.array());
 };
 
-// ── GET /api/products ─────────────────────────────────────────────────────
+
 const getAllProducts = asyncHandler(async (req, res) => {
   const { products, meta } = await productService.getProducts(req.query);
   return new ApiResponse(200, "Products fetched.", products, meta).send(res);
 });
 
-// ── GET /api/products/search?q= ───────────────────────────────────────────
+
 const searchProducts = asyncHandler(async (req, res) => {
   const { q, limit = 20, threshold = 0.4 } = req.query;
   if (!q) throw new ApiError(400, "Query parameter 'q' is required.");
@@ -25,13 +25,13 @@ const searchProducts = asyncHandler(async (req, res) => {
   return new ApiResponse(200, `Found ${results.length} result(s).`, results).send(res);
 });
 
-// ── GET /api/products/:id ─────────────────────────────────────────────────
+
 const getProduct = asyncHandler(async (req, res) => {
   const product = await productService.getProductById(req.params.id, req.user);
   return new ApiResponse(200, "Product fetched.", product).send(res);
 });
 
-// ── POST /api/products ────────────────────────────────────────────────────
+
 const createProduct = asyncHandler(async (req, res) => {
   validate(req);
   const product = await productService.createProduct(
@@ -42,7 +42,7 @@ const createProduct = asyncHandler(async (req, res) => {
   return new ApiResponse(201, "Product created.", product).send(res);
 });
 
-// ── PUT /api/products/:id ─────────────────────────────────────────────────
+
 const updateProduct = asyncHandler(async (req, res) => {
   validate(req);
   const product = await productService.updateProduct(
@@ -55,14 +55,14 @@ const updateProduct = asyncHandler(async (req, res) => {
   return new ApiResponse(200, "Product updated.", product).send(res);
 });
 
-// ── DELETE /api/products/:id ──────────────────────────────────────────────
+
 const deleteProduct = asyncHandler(async (req, res) => {
   const isAdmin = req.user.role === "admin";
   await productService.deleteProduct(req.params.id, req.user._id, isAdmin);
   return new ApiResponse(200, "Product deleted.").send(res);
 });
 
-// ── POST /api/products/:id/reviews ───────────────────────────────────────
+
 const addReview = asyncHandler(async (req, res) => {
   validate(req);
   const { rating, comment } = req.body;

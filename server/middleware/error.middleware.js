@@ -1,23 +1,23 @@
 const ApiError = require("../utils/ApiError");
 const logger = require("../utils/logger");
 
-/**
- * Centralized error handling middleware.
- * Must be registered LAST in the Express app (after all routes).
- *
- * Converts known error types to structured ApiError responses.
- * All responses follow: { success: false, message, errors[], stack? }
- */
-// eslint-disable-next-line no-unused-vars
+
+
+
+
+
+
+
+
 const errorMiddleware = (err, req, res, next) => {
   let error = err;
 
-  // ── Mongoose CastError (invalid ObjectId) ──────────────────────────
+
   if (err.name === "CastError") {
     error = new ApiError(400, `Invalid ${err.path}: ${err.value}`);
   }
 
-  // ── Multer Upload Errors ──────────────────────────────────────────
+
   if (err.name === "MulterError") {
     let message = "File upload failure occurred.";
     if (err.code === "LIMIT_FILE_SIZE") {
@@ -32,19 +32,19 @@ const errorMiddleware = (err, req, res, next) => {
     error = new ApiError(400, message);
   }
 
-  // ── Mongoose Duplicate Key (code 11000) ───────────────────────────
+
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue || {})[0] || "field";
     error = new ApiError(409, `Duplicate value for '${field}'. Please use another.`);
   }
 
-  // ── Mongoose Validation Error ─────────────────────────────────────
+
   if (err.name === "ValidationError") {
     const messages = Object.values(err.errors).map((e) => e.message);
     error = new ApiError(422, "Validation failed", messages);
   }
 
-  // ── JWT Errors ────────────────────────────────────────────────────
+
   if (err.name === "JsonWebTokenError") {
     error = new ApiError(401, "Invalid token. Please login again.");
   }
@@ -52,7 +52,7 @@ const errorMiddleware = (err, req, res, next) => {
     error = new ApiError(401, "Token expired. Please login again.");
   }
 
-  // ── If not already an ApiError, wrap it ───────────────────────────
+
   if (!(error instanceof ApiError)) {
     error = new ApiError(
       err.statusCode || 500,
@@ -60,7 +60,7 @@ const errorMiddleware = (err, req, res, next) => {
     );
   }
 
-  // Log server errors
+
   if (error.statusCode >= 500) {
     logger.error(`[${req.method}] ${req.path} → ${error.message}`, {
       stack: error.stack,

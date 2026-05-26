@@ -76,7 +76,7 @@ const ProductCard = memo(({ product, index = 0 }) => {
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
 
-    // fly-to cart bubble physics
+
     const rect = event.currentTarget.getBoundingClientRect();
     const startX = event.clientX || (rect.left + rect.width / 2);
     const startY = event.clientY || (rect.top + rect.height / 2);
@@ -107,9 +107,9 @@ const ProductCard = memo(({ product, index = 0 }) => {
       const elapsed = time - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // bezier handle coordinates
+
       const cpX = (startX + targetX) / 2;
-      const cpY = Math.min(startY, targetY) - 180; // High arc
+      const cpY = Math.min(startY, targetY) - 180;
 
       const x = (1 - progress) * (1 - progress) * startX + 2 * (1 - progress) * progress * cpX + progress * progress * targetX;
       const y = (1 - progress) * (1 - progress) * startY + 2 * (1 - progress) * progress * cpY + progress * progress * targetY;

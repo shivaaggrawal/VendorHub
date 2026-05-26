@@ -10,7 +10,7 @@ export default function AdminUsers() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch Users
+
   const { data: usersData, isLoading, error, refetch } = useQuery({
     queryKey: ["adminUsersList"],
     queryFn: async () => {
@@ -19,7 +19,7 @@ export default function AdminUsers() {
     },
   });
 
-  // Toggle user state mutation
+
   const toggleUserActiveMutation = useMutation({
     mutationFn: async (id) => {
       const res = await api.patch(`/admin/users/${id}/toggle-active`);
@@ -45,7 +45,7 @@ export default function AdminUsers() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
           User Account Control
@@ -55,7 +55,7 @@ export default function AdminUsers() {
         </p>
       </div>
 
-      {/* Control row */}
+
       <div className="flex items-center gap-3 bg-secondary/35 border border-[#412d15]/30 rounded-xl p-3 max-w-md">
         <Search className="w-4 h-4 text-muted-foreground" />
         <input
@@ -67,7 +67,7 @@ export default function AdminUsers() {
         />
       </div>
 
-      {/* Table */}
+
       <div className="bg-[#1f150c]/10 border border-[#412d15]/30 rounded-2xl overflow-hidden shadow-premium">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">

@@ -20,9 +20,9 @@ import {
 } from "lucide-react";
 import { logout } from "../redux/slices/authSlice";
 
-/* ────────────────────────────────────────────── */
-/*  Sidebar nav definitions                       */
-/* ────────────────────────────────────────────── */
+
+
+
 const sellerNavItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/seller/dashboard" },
   { label: "Products", icon: Package, to: "/seller/products" },
@@ -40,9 +40,9 @@ const adminNavItems = [
   { label: "Settings", icon: Settings, to: "/admin/settings" },
 ];
 
-/* ────────────────────────────────────────────── */
-/*  Sidebar component                             */
-/* ────────────────────────────────────────────── */
+
+
+
 const Sidebar = ({ navItems, collapsed, onClose, isMobile }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const Sidebar = ({ navItems, collapsed, onClose, isMobile }) => {
         collapsed && !isMobile ? "w-[68px]" : "w-64"
       } transition-all duration-300`}
     >
-      {/* Logo */}
+
       <div className="flex items-center justify-between h-16 px-4 border-b border-border shrink-0">
         <Link to="/" className="flex items-center gap-1.5 min-w-0 py-1 select-none">
           {collapsed && !isMobile ? (
@@ -84,7 +84,7 @@ const Sidebar = ({ navItems, collapsed, onClose, isMobile }) => {
         )}
       </div>
 
-      {/* Nav items */}
+
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
         {navItems.map(({ label, icon: Icon, to }) => {
           const isSellerPending = user?.role === "seller" && !user?.isVendorApproved;
@@ -130,7 +130,7 @@ const Sidebar = ({ navItems, collapsed, onClose, isMobile }) => {
         })}
       </nav>
 
-      {/* Logout */}
+
       <div className="px-3 py-4 border-t border-border shrink-0">
         <button
           onClick={handleLogout}
@@ -145,9 +145,6 @@ const Sidebar = ({ navItems, collapsed, onClose, isMobile }) => {
   );
 };
 
-/* ────────────────────────────────────────────── */
-/*  Dashboard Layout                              */
-/* ────────────────────────────────────────────── */
 const DashboardLayout = ({ role = "seller" }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -167,12 +164,12 @@ const DashboardLayout = ({ role = "seller" }) => {
 
   return (
     <div className="min-h-screen flex bg-background">
-      {/* ── Desktop Sidebar ───────────────── */}
+
       <div className="hidden md:flex shrink-0 sticky top-0 h-screen">
         <Sidebar navItems={navItems} collapsed={collapsed} />
       </div>
 
-      {/* ── Mobile Sidebar ────────────────── */}
+
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -201,12 +198,12 @@ const DashboardLayout = ({ role = "seller" }) => {
         )}
       </AnimatePresence>
 
-      {/* ── Main Content Area ─────────────── */}
+
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar */}
+
         <header className="h-16 flex items-center justify-between px-4 md:px-6 border-b border-border bg-card/50 backdrop-blur-sm shrink-0">
           <div className="flex items-center gap-3">
-            {/* Mobile menu */}
+
             <button
               onClick={() => setMobileOpen(true)}
               className="md:hidden h-9 w-9 rounded-lg hover:bg-muted flex items-center justify-center transition-colors"
@@ -215,7 +212,7 @@ const DashboardLayout = ({ role = "seller" }) => {
               <Menu className="w-5 h-5 text-foreground" />
             </button>
 
-            {/* Collapse toggle (desktop) */}
+
             <button
               onClick={() => setCollapsed((prev) => !prev)}
               className="hidden md:flex h-9 w-9 rounded-lg hover:bg-muted items-center justify-center transition-colors"
@@ -235,9 +232,9 @@ const DashboardLayout = ({ role = "seller" }) => {
             </div>
           </div>
 
-          {/* Right side */}
+
           <div className="flex items-center gap-2">
-            {/* Notification bell */}
+
             <button
               className="relative h-9 w-9 rounded-lg hover:bg-muted flex items-center justify-center transition-colors"
               aria-label="Notifications"
@@ -246,7 +243,7 @@ const DashboardLayout = ({ role = "seller" }) => {
               <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-card" />
             </button>
 
-            {/* User avatar */}
+
             <div className="flex items-center gap-2.5 ml-1">
               {user?.avatar ? (
                 <img
@@ -271,7 +268,7 @@ const DashboardLayout = ({ role = "seller" }) => {
           </div>
         </header>
 
-        {/* Page content */}
+
         <main className="flex-1 overflow-y-auto p-6">
           <motion.div
             initial={{ opacity: 0, y: 12 }}

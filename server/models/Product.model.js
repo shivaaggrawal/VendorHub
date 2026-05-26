@@ -24,7 +24,7 @@ const toTerms = (value = "") =>
 const uniqueLower = (values) =>
   [...new Set(values.filter(Boolean).map((value) => String(value).toLowerCase().trim()))];
 
-// ─── Review sub-schema ────────────────────────────────────────────────────
+
 const reviewSchema = new mongoose.Schema(
   {
     user:    { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -34,7 +34,7 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ─── Product schema ───────────────────────────────────────────────────────
+
 const productSchema = new mongoose.Schema(
   {
     title: {
@@ -70,7 +70,7 @@ const productSchema = new mongoose.Schema(
     },
     subcategory: { type: String, trim: true, default: "" },
 
-    // Multiple Cloudinary images
+
     images: [
       {
         public_id: { type: String, required: true },
@@ -78,30 +78,30 @@ const productSchema = new mongoose.Schema(
       },
     ],
 
-    // Seller who owns this product
+
     sellerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
-    // Embedded reviews
+
     reviews: [reviewSchema],
 
-    // Computed averages (updated on review add/remove)
+
     averageRating: { type: Number, default: 0 },
     numReviews:    { type: Number, default: 0 },
 
-    // Searchable tags used for AI recommendations
+
     tags: [{ type: String, trim: true, lowercase: true }],
 
-    // Synonym terms for advanced smart search matching
+
     synonyms: [{ type: String, trim: true, lowercase: true }],
 
-    // Trending indicator tags for recommendations
+
     trendingTags: [{ type: String, trim: true, lowercase: true }],
 
-    // Seller's physical/virtual location
+
     vendorLocation: { type: String, trim: true, default: "" },
 
     isActive: { type: Boolean, default: true },
@@ -109,7 +109,7 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ─── Indexes for fast queries ─────────────────────────────────────────────
+
 productSchema.index({ title: "text", description: "text", tags: "text" });
 productSchema.index({ synonyms: 1 });
 productSchema.index({ subcategory: 1 });
@@ -119,7 +119,7 @@ productSchema.index({ price: 1 });
 productSchema.index({ averageRating: -1 });
 productSchema.index({ createdAt: -1 });
 
-// ─── Method: recalculate rating averages ─────────────────────────────────
+
 productSchema.methods.updateRatingStats = function () {
   const count = this.reviews.length;
   if (count === 0) {
