@@ -9,7 +9,9 @@ const getCommissionRate = async () => {
     const Setting = require("../models/Setting.model");
     const s = await Setting.findOne({ key: "commissionRate" }).lean();
     if (s?.value?.rate !== undefined) return parseFloat(s.value.rate) / 100;
-  } catch (_)
+  } catch (_) {
+    // Fallback if settings query fails
+  }
   return parseFloat(process.env.PLATFORM_COMMISSION_RATE || "10") / 100;
 };
 

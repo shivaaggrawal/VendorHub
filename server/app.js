@@ -30,6 +30,10 @@ const logger = require("./utils/logger");
 
 const app = express();
 
+// Trust the first proxy in front of the server (e.g. Render, Vercel, Cloudflare)
+// This is critical for express-rate-limit to get the correct user IP rather than proxy IP
+app.set("trust proxy", 1);
+
 
 app.use(helmet());
 
